@@ -15,6 +15,7 @@ export interface WalletState {
   wallet?: string;
   initializeWallet: () => Promise<void>;
   connectWallet: () => Promise<void>;
+  disconnect: () => void;
   observeWalletChange: () => void;
 
   pendingTransactions: PendingTransaction[];
@@ -44,6 +45,11 @@ export const useWalletStore = create<WalletState, [["zustand/immer", never]]>(
 
       set((state) => {
         state.wallet = wallet;
+      });
+    },
+    disconnect() {
+      set((state) => {
+        state.wallet = undefined;
       });
     },
     observeWalletChange() {
