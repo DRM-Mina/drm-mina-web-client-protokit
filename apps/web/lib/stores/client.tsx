@@ -3,6 +3,7 @@ import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
 export type Client = typeof client;
+
 export interface ClientState {
   loading: boolean;
   client?: Client;
@@ -21,7 +22,6 @@ export const useClientStore = create<ClientState, [["zustand/immer", never]]>(
 
       set((state) => {
         state.loading = false;
-        // @ts-expect-error
         state.client = client;
       });
     },

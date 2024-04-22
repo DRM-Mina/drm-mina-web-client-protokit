@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { Client, useClientStore } from "./client";
 import { immer } from "zustand/middleware/immer";
 import { PendingTransaction, UnsignedTransaction } from "@proto-kit/sequencer";
-import { BalancesKey, TokenId } from "@proto-kit/library";
+import { Balance, BalancesKey, TokenId } from "@proto-kit/library";
 import { PublicKey, UInt64 } from "o1js";
 import { useCallback, useEffect } from "react";
 import { useChainStore } from "./chain";
@@ -53,7 +53,7 @@ export const useBalancesStore = create<
       const sender = PublicKey.fromBase58(address);
 
       const tx = await client.transaction(sender, () => {
-        balances.addBalance(tokenId, sender, UInt64.from(1000));
+        balances.addBalance(tokenId, sender, Balance.from(UInt64.from(1000)));
       });
 
       await tx.sign();
