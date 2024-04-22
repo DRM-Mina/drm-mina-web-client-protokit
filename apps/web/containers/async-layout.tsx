@@ -1,6 +1,5 @@
 import SearchBar from "@/app/components/searchbar";
 import { Sidebar } from "@/app/components/sidebar";
-import Header from "@/components/header";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 import { useBalancesStore, useObserveBalance } from "@/lib/stores/balances";
