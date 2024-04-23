@@ -19,6 +19,7 @@ import { useToast } from "@/components/ui/use-toast";
 import useHasMounted from "@/lib/customHooks";
 import { fetchGameData } from "@/lib/api";
 import { useGamesStore } from "@/lib/stores/gameStore";
+import { useChainStore } from "@/lib/stores/chain";
 // import { useWorkerStore } from "@/lib/stores/workerStore";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -29,6 +30,7 @@ export function Sidebar({ className }: SidebarProps) {
   const gameStore = useGamesStore();
   // const workerStore = useWorkerStore();
   const hasMounted = useHasMounted();
+  const chain = useChainStore();
 
   const { toast } = useToast();
 
@@ -134,7 +136,8 @@ export function Sidebar({ className }: SidebarProps) {
           className=" items-center rounded-lg text-center"
           variant="outline"
         >
-          v0.0.1
+          <div className={"mr-1 h-2 w-2 rounded-full bg-green-400"}></div>
+          <span>{chain.block?.height ?? "-"}</span>
         </Badge>
       </div>
     </div>
