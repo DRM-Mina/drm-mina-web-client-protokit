@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { Experimental, Field, Provable, PublicKey, Struct } from "o1js";
 import { Identifiers } from "./lib/identifiers/Identifiers";
 import { RuntimeModule, runtimeMethod, runtimeModule, state } from "@proto-kit/module";
