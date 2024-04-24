@@ -2,9 +2,9 @@
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { ModeToggle } from "@/components/mode-toggle";
-import { Wallet, Bookmark, Store, Gamepad2, Shapes, Bell } from "lucide-react";
+import { Bookmark, Store, Gamepad2, Shapes, Bell } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import Web3wallet from "./web3wallet";
 import Link from "next/link";
@@ -16,11 +16,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/components/ui/use-toast";
-import useHasMounted from "@/lib/customHooks";
 import { fetchGameData } from "@/lib/api";
 import { useGamesStore } from "@/lib/stores/gameStore";
 import { useChainStore } from "@/lib/stores/chain";
-// import { useWorkerStore } from "@/lib/stores/workerStore";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -28,8 +26,6 @@ export function Sidebar({ className }: SidebarProps) {
   const [currentPath, setCurrentPath] = useState<string>("/");
   const router = useRouter();
   const gameStore = useGamesStore();
-  // const workerStore = useWorkerStore();
-  const hasMounted = useHasMounted();
   const chain = useChainStore();
 
   const { toast } = useToast();
@@ -39,20 +35,9 @@ export function Sidebar({ className }: SidebarProps) {
     router.push(path);
   };
 
-  useMemo(() => {
+  useEffect(() => {
     fetchGameData().then((data) => gameStore.setGames(data));
   }, []);
-
-  //   useEffect(() => {
-  //     if (hasMounted && workerStore.status === 0) {
-  //       workerStore.startWorker();
-  //       toast({
-  //         title: "Web workers loading",
-  //         description:
-  //           "Our web workers working hard to getting ready things up, computer's fans could speed up a little 😬",
-  //       });
-  //     }
-  //   }, [hasMounted]);
 
   return (
     <div
