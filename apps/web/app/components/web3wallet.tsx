@@ -7,13 +7,11 @@ import {
 import { toast } from "@/components/ui/use-toast";
 import { fetchWishlist } from "@/lib/api";
 import { useUserStore } from "@/lib/stores/userWallet";
-// import { useWorkerStore } from "@/lib/stores/workerStore";
 import { Wallet } from "lucide-react";
 import React, { useEffect } from "react";
 
 export default function Web3wallet() {
   const userWallet = useUserStore();
-  // const workerStore = useWorkerStore();
 
   const connect = async () => {
     userWallet.setConnecting(true);
@@ -34,18 +32,6 @@ export default function Web3wallet() {
       userWallet.setWishlist(wishlist);
     }
   };
-
-  // useEffect(() => {
-  //     (async () => {
-  //         if (workerStore.status > 1 && userWallet.isConnected) {
-  //             console.log(userWallet.userPublicKey);
-  //             const res = await workerStore.worker?.getBalance({
-  //                 publicKey: userWallet.userPublicKey!,
-  //             });
-  //             userWallet.setUserMinaBalance(res! / 1000000000);
-  //         }
-  //     })();
-  // }, [workerStore.status, userWallet.isConnected]);
 
   const disconnect = async () => {
     userWallet.disconnect();

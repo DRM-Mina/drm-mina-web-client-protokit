@@ -15,18 +15,18 @@ import { Badge } from "@/components/ui/badge";
 import { useGamesStore } from "@/lib/stores/gameStore";
 import { useDeviceStore } from "@/lib/stores/deviceStore";
 import { useToast } from "@/components/ui/use-toast";
-import { useUserStore } from "@/lib/stores/userWallet";
+import dynamic from "next/dynamic";
 
 const ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
+
+const BuyGame = dynamic(() => import("./buyGame"));
 
 export default function GameDetail() {
   const gameName = useSearchParams().get("game");
   const device = useSearchParams().get("device");
   const gameStore = useGamesStore();
   const deviceStore = useDeviceStore();
-  const userStore = useUserStore();
   const { toast } = useToast();
-
   useEffect(() => {
     if (device) {
       if (deviceStore.isDeviceSet === false) {
@@ -45,16 +45,16 @@ export default function GameDetail() {
 
   const game = gameStore.games.find((game) => game.name === gameName);
 
-  const handleGameBuy = () => {
-    if (userStore.isConnected === false) {
-      toast({
-        title: "Wallet not connected",
-        description: "Please connect your wallet",
-      });
-      return;
-    }
-    console.log("Buying game");
-  };
+  // const handleGameBuy = () => {
+  //   if (userStore.isConnected === false) {
+  //     toast({
+  //       title: "Wallet not connected",
+  //       description: "Please connect your wallet",
+  //     });
+  //     return;
+  //   }
+  //   console.log("Buying game");
+  // };
   const handleGameDownload = () => {};
 
   return (
@@ -135,9 +135,10 @@ export default function GameDetail() {
                     className=" inline-block h-4 w-4"
                   />
                 </div>
-                <Button variant={"default"} onClick={handleGameBuy}>
+                {/* <Button variant={"default"} onClick={handleGameBuy}>
                   Buy Game
-                </Button>
+                </Button> */}
+                <BuyGame gameId={game?.gameId} />
               </div>
               <Button variant={"link"} onClick={handleGameDownload}>
                 <Download size={24} />
