@@ -15,32 +15,27 @@ export default function ChainStatus() {
     if (!client.client) return;
     (async () => {
       const games: Game[] = await fetchGameData();
-      console.log("games fetched");
       const totalGames =
-        await client.client.query.runtime.GameToken.totalGameNumber.get();
-      console.log("total games: ", totalGames?.toString());
+        await client.client!.query.runtime.GameToken.totalGameNumber.get();
       const gameIds = Array.from(
         { length: Number(totalGames?.toString()) },
         (_, i) => i + 1,
       );
-      console.log("gameIds: ", gameIds);
       for (const gameId of gameIds) {
-        console.log("fetching game: ", gameId);
-        const price = await client.client.query.runtime.GameToken.gamePrice.get(
-          UInt64.from(gameId),
-        );
-        const discount =
-          await client.client.query.runtime.GameToken.discount.get(
+        const price =
+          await client.client!.query.runtime.GameToken.gamePrice.get(
             UInt64.from(gameId),
           );
-        console.log("price: ", price.value.toString());
-        console.log("discount: ", discount.value.toString());
+        const discount =
+          await client.client!.query.runtime.GameToken.discount.get(
+            UInt64.from(gameId),
+          );
         if (price?.value && discount?.value) {
           games[gameId - 1].price = Number(price.value.toString());
           games[gameId - 1].discount = Number(discount.value.toString());
         }
       }
-      console.log("games: ", games);
+      console.log("games fetched from chain");
       gameStore.setGames(games);
       const discounts = games.filter((game: Game) => game.discount > 0);
       gameStore.setDiscountGames(discounts);

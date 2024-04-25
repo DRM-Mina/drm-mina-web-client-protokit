@@ -45,29 +45,29 @@ export const useMarketStore = create<MarketState, [["zustand/immer", never]]>(
   })),
 );
 
-// export const useBuyGame = (gameId: number) => {
-//   const marketStore = useMarketStore();
-//   const client = useClientStore();
-//   const userStore = useUserStore();
-//   const transactions = useTransactionStore();
-//   const {toast} = useToast();
+export const useBuyGame = (gameId?: number) => {
+  const marketStore = useMarketStore();
+  const client = useClientStore();
+  const userStore = useUserStore();
+  const transactions = useTransactionStore();
+  const { toast } = useToast();
 
-//   return useCallback(async () => {
-//     if (userStore.isConnected === false) {
-//       toast({
-//         title: "Wallet not connected",
-//         description: "Please connect your wallet",
-//       });
-//       return;
-//     }
-//     if (!client.client || !userStore.userPublicKey || !gameId) return;
+  return useCallback(async () => {
+    if (userStore.isConnected === false) {
+      toast({
+        title: "Wallet not connected",
+        description: "Please connect your wallet",
+      });
+      return;
+    }
+    if (!client.client || !userStore.userPublicKey || !gameId) return;
 
-//     const pendingTransaction = await marketStore.buyGame(
-//       client.client,
-//       userStore.userPublicKey,
-//       gameId,
-//     );
+    const pendingTransaction = await marketStore.buyGame(
+      client.client,
+      userStore.userPublicKey,
+      gameId,
+    );
 
-//     transactions.addPendingTransaction(pendingTransaction);
-//   }, [client.client, userStore.userPublicKey]);
-// };
+    transactions.addPendingTransaction(pendingTransaction);
+  }, [client.client, userStore.userPublicKey]);
+};

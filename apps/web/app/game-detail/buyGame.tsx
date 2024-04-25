@@ -1,34 +1,36 @@
 import { Button } from "@/components/ui/button";
-import { toast } from "@/components/ui/use-toast";
-import { useFaucet } from "@/lib/stores/balances";
-import { useClientStore } from "@/lib/stores/client";
-import { useMarketStore } from "@/lib/stores/marketOperations";
-import { useUserStore } from "@/lib/stores/userWallet";
+import { useBuyGame } from "@/lib/stores/marketOperations";
 import React from "react";
 
 interface BuyGameProps {
-  gameId: number | undefined;
+  game: Game | undefined;
 }
 
-export default function BuyGame({ gameId }: BuyGameProps) {
-  const userStore = useUserStore();
-  const client = useClientStore();
-  const marketStore = useMarketStore();
-  const handleGameBuy = () => {
-    if (userStore.isConnected === false) {
-      toast({
-        title: "Wallet not connected",
-        description: "Please connect your wallet",
-      });
-      return;
-    }
-    if (!client.client || !userStore.userPublicKey || !gameId) return;
-    marketStore.buyGame(client.client, userStore.userPublicKey, gameId);
-    console.log("Buying game id: ", gameId);
-  };
+export default function BuyGame({ game }: BuyGameProps) {
+  const handleGameBuy = useBuyGame(game!.gameId);
+
   return (
-    <Button variant={"default"} onClick={handleGameBuy}>
-      Buy Game
-    </Button>
+    <div className=" mt-8 flex flex-row gap-4 rounded-lg border border-gray-300 p-2">
+      <div className=" flex items-center justify-center gap-1 ">
+        {game?.discount || 0 > 0 ? (
+          <>
+            <div className=" text-discount bg-discount rounded-lg p-1 text-lg">
+              -%
+              {Math.floor(((game?.discount || 0) / (game?.price || 1)) * 100)}
+            </div>
+            <span className="strikethrough px-2 text-base text-gray-500">
+              {game?.price}
+            </span>
+          </>
+        ) : (
+          <></>
+        )}
+        <span className="text-base">{game?.price! - game?.discount!}</span>
+        <img src={"/mina.png"} alt="mina" className=" inline-block h-4 w-4" />
+      </div>
+      <Button variant={"default"} onClick={handleGameBuy}>
+        Buy Game
+      </Button>
+    </div>
   );
 }

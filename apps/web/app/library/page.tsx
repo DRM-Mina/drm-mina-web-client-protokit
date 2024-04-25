@@ -13,22 +13,7 @@ export default function Library() {
   return (
     <div className=" p-8">
       {userStore.isConnected ? (
-        userStore.library.length === 0 ? (
-          <div className=" flex w-full justify-center ">
-            <h2 className="mb-2 text-lg font-medium tracking-tight">
-              Your Library Is Empty
-            </h2>
-
-            <h3
-              className="absolute top-1/2 mb-2 cursor-pointer align-middle text-lg font-medium tracking-tight underline underline-offset-2 hover:underline-offset-4"
-              onClick={() => router.push("/store")}
-            >
-              Explore the store
-            </h3>
-          </div>
-        ) : (
-          <DynamicLibrary />
-        )
+        <DynamicLibrary />
       ) : (
         <div className="flex h-[80vh] items-center justify-center">
           <h3 className="text-3xl font-medium">

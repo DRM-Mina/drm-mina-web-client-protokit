@@ -2,11 +2,10 @@
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Bookmark, Store, Gamepad2, Shapes, Bell } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import Web3wallet from "./web3wallet";
+import Web3wallet from "./web3wallet/web3wallet";
 import Link from "next/link";
 import {
   DropdownMenu,
@@ -64,7 +63,6 @@ export function Sidebar({ className }: SidebarProps) {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-          {/* <h2 className="my-2 px-4 text-lg font-semibold tracking-tight">Marketplace</h2> */}
           <div className="my-2 space-y-1">
             <Button
               variant={

@@ -28,28 +28,41 @@ export default function DynamicLibrary() {
     if (!client.client || !userStore.userPublicKey) return;
     (async () => {
       const totalGames =
-        await client.client.query.runtime.GameToken.totalGameNumber.get();
+        await client.client!.query.runtime.GameToken.totalGameNumber.get();
       const gameIds = Array.from(
-        { length: totalGames?.toNumber() - 1 },
+        { length: Number(totalGames?.toString()) },
         (_, i) => i + 1,
       );
       let library: number[] = [];
-      gameIds.map(async (gameId) => {
+      for (const gameId of gameIds) {
         const userKey = UserKey.from(
           UInt64.from(gameId),
-          PublicKey.fromBase58(userStore.userPublicKey),
+          PublicKey.fromBase58(userStore.userPublicKey!),
         );
         const query =
-          await client.client.query.runtime.GameToken.users.get(userKey);
+          await client.client!.query.runtime.GameToken.users.get(userKey);
         if (query?.value) {
           library.push(gameId);
         }
-      });
+      }
       userStore.setLibrary(library);
     })();
   }, [userStore.userPublicKey, client.client, chain.block?.height]);
 
-  return (
+  return userStore.library.length === 0 ? (
+    <div className=" flex w-full justify-center ">
+      <h2 className="mb-2 text-lg font-medium tracking-tight">
+        Your Library Is Empty
+      </h2>
+
+      <h3
+        className="absolute top-1/2 mb-2 cursor-pointer align-middle text-lg font-medium tracking-tight underline underline-offset-2 hover:underline-offset-4"
+        onClick={() => router.push("/store")}
+      >
+        Explore the store
+      </h3>
+    </div>
+  ) : (
     <div className=" flex w-full flex-wrap justify-center gap-4">
       {gameStore.games
         .filter((game: Game) => userStore.library.includes(game.gameId))

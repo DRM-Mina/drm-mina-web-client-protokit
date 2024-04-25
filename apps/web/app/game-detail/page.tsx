@@ -45,16 +45,6 @@ export default function GameDetail() {
 
   const game = gameStore.games.find((game) => game.name === gameName);
 
-  // const handleGameBuy = () => {
-  //   if (userStore.isConnected === false) {
-  //     toast({
-  //       title: "Wallet not connected",
-  //       description: "Please connect your wallet",
-  //     });
-  //     return;
-  //   }
-  //   console.log("Buying game");
-  // };
   const handleGameDownload = () => {};
 
   return (
@@ -83,7 +73,7 @@ export default function GameDetail() {
               {Array.from({ length: 5 }).map((_, i) => (
                 <CarouselItem key={i}>
                   <img
-                    src={ENDPOINT + game?.cover}
+                    src={ENDPOINT! + game?.cover}
                     crossOrigin="anonymous"
                     alt="Game"
                     className="aspect-video h-full w-full object-cover"
@@ -109,37 +99,7 @@ export default function GameDetail() {
             </div>
 
             <div className="flex flex-col items-center gap-4 ">
-              <div className=" mt-8 flex flex-row gap-4 rounded-lg border border-gray-300 p-2">
-                <div className=" flex items-center justify-center gap-1 ">
-                  {game?.discount || 0 > 0 ? (
-                    <>
-                      <div className=" text-discount bg-discount rounded-lg p-1 text-lg">
-                        -%
-                        {Math.floor(
-                          ((game?.discount || 0) / (game?.price || 1)) * 100,
-                        )}
-                      </div>
-                      <span className="strikethrough px-2 text-base text-gray-500">
-                        {game?.price}
-                      </span>
-                    </>
-                  ) : (
-                    <></>
-                  )}
-                  <span className="text-base">
-                    {game?.price - game?.discount}
-                  </span>
-                  <img
-                    src={"/mina.png"}
-                    alt="mina"
-                    className=" inline-block h-4 w-4"
-                  />
-                </div>
-                {/* <Button variant={"default"} onClick={handleGameBuy}>
-                  Buy Game
-                </Button> */}
-                <BuyGame gameId={game?.gameId} />
-              </div>
+              <BuyGame game={game} />
               <Button variant={"link"} onClick={handleGameDownload}>
                 <Download size={24} />
                 Download Game

@@ -66,36 +66,6 @@ export const useBalancesStore = create<
   })),
 );
 
-// export const useObserveBalance = () => {
-//   const client = useClientStore();
-//   const chain = useChainStore();
-//   const wallet = useWalletStore();
-//   const balances = useBalancesStore();
-
-//   useEffect(() => {
-//     if (!client.client || !wallet.wallet) return;
-
-//     balances.loadBalance(client.client, wallet.wallet);
-//   }, [client.client, chain.block?.height, wallet.wallet]);
-// };
-
-// export const useFaucet = () => {
-//   const client = useClientStore();
-//   const balances = useBalancesStore();
-//   const wallet = useWalletStore();
-
-//   return useCallback(async () => {
-//     if (!client.client || !wallet.wallet) return;
-
-//     const pendingTransaction = await balances.faucet(
-//       client.client,
-//       wallet.wallet,
-//     );
-
-//     wallet.addPendingTransaction(pendingTransaction);
-//   }, [client.client, wallet.wallet]);
-// };
-
 export const useObserveBalance = () => {
   const client = useClientStore();
   const chain = useChainStore();
