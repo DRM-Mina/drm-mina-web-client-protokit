@@ -15,7 +15,6 @@ import {
   CardShadow,
   CardTitle,
 } from "@/components/ui/card";
-import { fetchGameData } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { useGamesStore } from "@/lib/stores/gameStore";
 import GameBookmark from "./bookmark";
@@ -27,13 +26,6 @@ export default function Discounts() {
   const gameStore = useGamesStore();
 
   const router = useRouter();
-
-  useMemo(() => {
-    fetchGameData().then((data) => {
-      data = data.filter((game: Game) => game.discount > 0);
-      gameStore.setDiscountGames(data);
-    });
-  }, []);
 
   return (
     <div className="col-span-3 row-span-1 flex justify-center lg:col-span-5">

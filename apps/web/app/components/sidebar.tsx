@@ -15,29 +15,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useToast } from "@/components/ui/use-toast";
-import { fetchGameData } from "@/lib/api";
-import { useGamesStore } from "@/lib/stores/gameStore";
-import { useChainStore } from "@/lib/stores/chain";
+import dynamic from "next/dynamic";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
+
+const ChainStatus = dynamic(() => import("./chainStatus"));
 
 export function Sidebar({ className }: SidebarProps) {
   const [currentPath, setCurrentPath] = useState<string>("/");
   const router = useRouter();
-  const gameStore = useGamesStore();
-  const chain = useChainStore();
-
-  const { toast } = useToast();
 
   const handleNavigate = (path: string) => {
     setCurrentPath(path);
     router.push(path);
   };
-
-  useEffect(() => {
-    fetchGameData().then((data) => gameStore.setGames(data));
-  }, []);
 
   return (
     <div
@@ -116,14 +107,7 @@ export function Sidebar({ className }: SidebarProps) {
         </div>
       </div>
       <div className="absolute bottom-4 flex w-full justify-between self-end px-6">
-        <ModeToggle />{" "}
-        <Badge
-          className=" items-center rounded-lg text-center"
-          variant="outline"
-        >
-          <div className={"mr-1 h-2 w-2 rounded-full bg-green-400"}></div>
-          <span>{chain.block?.height ?? "-"}</span>
-        </Badge>
+        <ModeToggle /> <ChainStatus />
       </div>
     </div>
   );
