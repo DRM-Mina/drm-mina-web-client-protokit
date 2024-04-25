@@ -5,13 +5,17 @@ import { Toaster } from "@/components/ui/toaster";
 import { useBalancesStore, useObserveBalance } from "@/lib/stores/balances";
 import { useChainStore, usePollBlockHeight } from "@/lib/stores/chain";
 import { useClientStore } from "@/lib/stores/client";
+import { useMarketStore } from "@/lib/stores/marketOperations";
 import { useNotifyTransactions } from "@/lib/stores/transactionStore";
+import { useUserStore } from "@/lib/stores/userWallet";
 import { ReactNode, useEffect, useMemo } from "react";
 
 export default function AsyncLayout({ children }: { children: ReactNode }) {
   const client = useClientStore();
   const chain = useChainStore();
   const balances = useBalancesStore();
+  const marketStore = useMarketStore();
+  const userStore = useUserStore();
 
   usePollBlockHeight();
   useObserveBalance();

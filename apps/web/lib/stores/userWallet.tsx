@@ -79,27 +79,3 @@ export const useUserStore = create<UserState, [["zustand/immer", never]]>(
     },
   })),
 );
-
-// export const fetchLibrary = () => {
-//   const client = useClientStore();
-//   const chain = useChainStore();
-//   const userStore = useUserStore();
-//   if (!client.client || !userStore.userPublicKey) return;
-//   const totalGames = await client.query.runtime.GameToken.totalGameNumber.get();
-//   const gameIds = Array.from(
-//     { length: totalGames?.toNumber() - 1 },
-//     (_, i) => i + 1,
-//   );
-//   let library: number[] = [];
-//   gameIds.map(async (gameId) => {
-//     const userKey = UserKey.from(
-//       UInt64.from(gameId),
-//       PublicKey.fromBase58(userPublicKey),
-//     );
-//     const query = await client.query.runtime.GameToken.users.get(userKey);
-//     if (query?.value) {
-//       library.push(gameId);
-//     }
-//   });
-//   return library;
-// };
