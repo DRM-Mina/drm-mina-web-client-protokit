@@ -11,6 +11,8 @@ import { useToast } from "@/components/ui/use-toast";
 import { useChainStore } from "./chain";
 import { useEffect } from "react";
 import { UserKey } from "chain/dist/GameToken";
+import { fetchSlotNames } from "../api";
+import { DeviceKey } from "chain/dist/DRM";
 
 export interface MarketState {
   buyGame: (
@@ -103,6 +105,49 @@ export const useObserveLibrary = () => {
         }
       }
       userStore.setLibrary(library);
+    })();
+  }, [client.client, chain.block?.height, wallet.userPublicKey || ""]);
+};
+
+export const useObserveSlots = (gameId: number) => {
+  const client = useClientStore();
+  const chain = useChainStore();
+  const wallet = useUserStore();
+  const userStore = useUserStore();
+
+  useEffect(() => {
+    if (
+      !client.client ||
+      !userStore.userPublicKey ||
+      !userStore.library.includes(gameId)
+    )
+      return;
+    (async () => {
+      const slotCountQuery =
+        await client.client!.query.runtime.GameToken.number_of_devices_allowed.get(
+          UInt64.from(gameId),
+        );
+      if (slotCountQuery?.value) {
+        const slotCount = Number(slotCountQuery.value.toString());
+        let slotNamesArray = await fetchSlotNames(
+          userStore.userPublicKey!,
+          gameId,
+        );
+        slotNamesArray = slotNamesArray.slice(0, slotCount);
+
+        let slotArray: string[] = [];
+
+        const deviceKey = DeviceKey.from(
+          UInt64.from(gameId),
+          PublicKey.fromBase58(userStore.userPublicKey!),
+        );
+        const slotQuery =
+          await client.client!.query.runtime.DRM.devices.get(deviceKey);
+        if (slotQuery?.value) slotArray = slotQuery.value;
+        else slotArray = Array.from({ length: slotCount }, (_, i) => "Empty");
+        console.log("SET LIBRARY: ", gameId);
+        userStore.setSlots(gameId, slotNamesArray, slotArray);
+      }
     })();
   }, [client.client, chain.block?.height, wallet.userPublicKey || ""]);
 };

@@ -23,6 +23,8 @@ const BuyGame = dynamic(() => import("../components/buyGame"), {
   loading: () => <Button>Loading...</Button>,
 });
 
+const AssignDevice = dynamic(() => import("./assignDevice"));
+
 export default function GameDetail() {
   const gameName = useSearchParams().get("game");
   const device = useSearchParams().get("device");
@@ -33,13 +35,15 @@ export default function GameDetail() {
     if (device) {
       if (deviceStore.isDeviceSet === false) {
         deviceStore.setDevice(JSON.parse(device));
-        toast({
-          title: "Device set",
-          description:
-            "We got your device information 🕵️, just kidding your information is only yours ✨",
-        });
+        router.push("/game-detail?game=" + gameName);
       }
-      router.push("/game-detail?game=" + gameName);
+    }
+    if (deviceStore.isDeviceSet) {
+      toast({
+        title: "Device set",
+        description:
+          "We got your device information 🕵️, just kidding your information is only yours ✨",
+      });
     }
   }, []);
 
@@ -142,17 +146,21 @@ export default function GameDetail() {
           </div>
         </div>
       </div>
-      <div className=" w-1/3 p-8">
-        <h3 className=" font-semibold">Recommended System Requirements</h3>
-        <Separator />
-        <div className=" mt-4 text-base">
-          <ul>
-            <li>Processor: Intel Core i5-3570K</li>
-            <li>Memory: 8 GB RAM</li>
-            <li>Graphics: GeForce GTX 780</li>
-            <li>Storage: 10 GB available space</li>
-          </ul>
+      <div className=" grid grid-cols-6">
+        <div className=" col-span-2 p-8">
+          <h3 className=" font-semibold">Recommended System Requirements</h3>
+          <Separator />
+          <div className=" mt-4 text-base">
+            <ul>
+              <li>Processor: Intel Core i5-3570K</li>
+              <li>Memory: 8 GB RAM</li>
+              <li>Graphics: GeForce GTX 780</li>
+              <li>Storage: 10 GB available space</li>
+            </ul>
+          </div>
         </div>
+        <div className=" col-span-1"></div>
+        <AssignDevice gameId={game?.gameId!} />
       </div>
       {/* <CommentSection /> */}
     </div>
