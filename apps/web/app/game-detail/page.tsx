@@ -15,29 +15,35 @@ import { Badge } from "@/components/ui/badge";
 import { useGamesStore } from "@/lib/stores/gameStore";
 import { useDeviceStore } from "@/lib/stores/deviceStore";
 import { useToast } from "@/components/ui/use-toast";
-import { useUserStore } from "@/lib/stores/userWallet";
+import dynamic from "next/dynamic";
 
 const ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
+
+const BuyGame = dynamic(() => import("../components/buyGame"), {
+  loading: () => <Button>Loading...</Button>,
+});
+
+const AssignDevice = dynamic(() => import("./assignDevice"));
 
 export default function GameDetail() {
   const gameName = useSearchParams().get("game");
   const device = useSearchParams().get("device");
   const gameStore = useGamesStore();
   const deviceStore = useDeviceStore();
-  const userStore = useUserStore();
   const { toast } = useToast();
-
   useEffect(() => {
     if (device) {
       if (deviceStore.isDeviceSet === false) {
         deviceStore.setDevice(JSON.parse(device));
-        toast({
-          title: "Device set",
-          description:
-            "We got your device information 🕵️, just kidding your information is only yours ✨",
-        });
+        router.push("/game-detail?game=" + gameName);
       }
-      router.push("/game-detail?game=" + gameName);
+    }
+    if (deviceStore.isDeviceSet) {
+      toast({
+        title: "Device set",
+        description:
+          "We got your device information 🕵️, just kidding your information is only yours ✨",
+      });
     }
   }, []);
 
@@ -45,17 +51,12 @@ export default function GameDetail() {
 
   const game = gameStore.games.find((game) => game.name === gameName);
 
-  const handleGameBuy = () => {
-    if (userStore.isConnected === false) {
-      toast({
-        title: "Wallet not connected",
-        description: "Please connect your wallet",
-      });
-      return;
-    }
-    console.log("Buying game");
+  const handleGameDownload = () => {
+    toast({
+      title: "Download started",
+      description: "Just kidding we do not have this feature yet 🚀",
+    });
   };
-  const handleGameDownload = () => {};
 
   return (
     <div>
@@ -83,7 +84,7 @@ export default function GameDetail() {
               {Array.from({ length: 5 }).map((_, i) => (
                 <CarouselItem key={i}>
                   <img
-                    src={ENDPOINT + game?.cover}
+                    src={ENDPOINT! + game?.cover}
                     crossOrigin="anonymous"
                     alt="Game"
                     className="aspect-video h-full w-full object-cover"
@@ -127,7 +128,7 @@ export default function GameDetail() {
                     <></>
                   )}
                   <span className="text-base">
-                    {game?.price - game?.discount}
+                    {game?.price! - game?.discount!}
                   </span>
                   <img
                     src={"/mina.png"}
@@ -135,9 +136,7 @@ export default function GameDetail() {
                     className=" inline-block h-4 w-4"
                   />
                 </div>
-                <Button variant={"default"} onClick={handleGameBuy}>
-                  Buy Game
-                </Button>
+                <BuyGame gameId={game?.gameId} />
               </div>
               <Button variant={"link"} onClick={handleGameDownload}>
                 <Download size={24} />
@@ -147,17 +146,21 @@ export default function GameDetail() {
           </div>
         </div>
       </div>
-      <div className=" w-1/3 p-8">
-        <h3 className=" font-semibold">Recommended System Requirements</h3>
-        <Separator />
-        <div className=" mt-4 text-base">
-          <ul>
-            <li>Processor: Intel Core i5-3570K</li>
-            <li>Memory: 8 GB RAM</li>
-            <li>Graphics: GeForce GTX 780</li>
-            <li>Storage: 10 GB available space</li>
-          </ul>
+      <div className=" grid grid-cols-6">
+        <div className=" col-span-2 p-8">
+          <h3 className=" font-semibold">Recommended System Requirements</h3>
+          <Separator />
+          <div className=" mt-4 text-base">
+            <ul>
+              <li>Processor: Intel Core i5-3570K</li>
+              <li>Memory: 8 GB RAM</li>
+              <li>Graphics: GeForce GTX 780</li>
+              <li>Storage: 10 GB available space</li>
+            </ul>
+          </div>
         </div>
+        <div className=" col-span-1"></div>
+        <AssignDevice gameId={game?.gameId!} />
       </div>
       {/* <CommentSection /> */}
     </div>

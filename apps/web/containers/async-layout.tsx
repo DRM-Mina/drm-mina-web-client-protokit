@@ -2,35 +2,24 @@ import SearchBar from "@/app/components/searchbar";
 import { Sidebar } from "@/app/components/sidebar";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
-import { useBalancesStore, useObserveBalance } from "@/lib/stores/balances";
-import { useChainStore, usePollBlockHeight } from "@/lib/stores/chain";
+import { useObserveBalance } from "@/lib/stores/balances";
+import { usePollBlockHeight } from "@/lib/stores/chain";
 import { useClientStore } from "@/lib/stores/client";
-import { useNotifyTransactions, useWalletStore } from "@/lib/stores/wallet";
-import { ReactNode, useEffect, useMemo } from "react";
+import { useObserveLibrary } from "@/lib/stores/marketOperations";
+import { useNotifyTransactions } from "@/lib/stores/transactionStore";
+import { ReactNode, useEffect } from "react";
 
 export default function AsyncLayout({ children }: { children: ReactNode }) {
-  const wallet = useWalletStore();
   const client = useClientStore();
-  const chain = useChainStore();
-  const balances = useBalancesStore();
 
   usePollBlockHeight();
   useObserveBalance();
   useNotifyTransactions();
+  useObserveLibrary();
 
   useEffect(() => {
     client.start();
   }, []);
-
-  useEffect(() => {
-    wallet.initializeWallet();
-    wallet.observeWalletChange();
-  }, []);
-
-  const loading = useMemo(
-    () => client.loading || balances.loading,
-    [client.loading, balances.loading],
-  );
 
   return (
     <>

@@ -100,3 +100,34 @@
 .text-discount {
   color: hsl(var(--discount));
 }
+.card-hover-effect {
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.card-hover-effect:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card-hover-effect:hover .card-drawer {
+  bottom: 0;
+}
+
+.card-hover-effect .card-drawer {
+  position: absolute;
+  opacity: 0.8;
+  bottom: -100%; /* Starts off the screen */
+  left: 0;
+  width: 100%;
+  transition: bottom 0.3s ease-in-out;
+}
+
+.card-hover-effect:hover .card-image {
+  filter: blur(4px);
+  transition: filter 0.3s ease-in-out;
+}

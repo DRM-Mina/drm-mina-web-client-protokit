@@ -55,3 +55,50 @@ export async function fetchWishlist(userPubKey: string) {
   }
   return json;
 }
+
+export async function fetchSlotNames(
+  userPubKey: string,
+  gameId: number,
+): Promise<string[]> {
+  const headers = { "Content-Type": "application/json" };
+
+  const res = await fetch(ENDPOINT + "slot-names/" + userPubKey, {
+    headers,
+    method: "POST",
+    body: JSON.stringify({ gameId }),
+  });
+  const json = await res.json();
+  if (json.errors) {
+    console.error(json.errors);
+    throw new Error("Failed to fetch slot names API");
+  }
+  return json;
+}
+
+export async function postSlotNames(
+  userPubKey: string,
+  gameId: number,
+  slots: string[],
+): Promise<boolean> {
+  const headers = { "Content-Type": "application/json" };
+
+  const res = await fetch(ENDPOINT + "slot-names/" + userPubKey, {
+    headers,
+    method: "POST",
+    body: JSON.stringify({ gameId: gameId, slotNames: slots }),
+  });
+
+  const json = await res.json();
+  const status = res.status;
+
+  if (json.errors) {
+    console.error(json.errors);
+    throw new Error("Failed to post slot names API");
+  }
+
+  if (status == 201) {
+    return true;
+  } else {
+    return false;
+  }
+}

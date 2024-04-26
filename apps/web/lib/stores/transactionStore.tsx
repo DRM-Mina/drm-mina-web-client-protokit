@@ -11,59 +11,17 @@ import { useClientStore } from "./client";
 import { useChainStore } from "./chain";
 import { Bool, Field, PublicKey, Signature, UInt64 } from "o1js";
 
-export interface WalletState {
-  wallet?: string;
-  initializeWallet: () => Promise<void>;
-  connectWallet: () => Promise<void>;
-  disconnect: () => void;
-  observeWalletChange: () => void;
-
+export interface TransactionState {
   pendingTransactions: PendingTransaction[];
   addPendingTransaction: (pendingTransaction: PendingTransaction) => void;
   removePendingTransaction: (pendingTransaction: PendingTransaction) => void;
 }
 
-export const useWalletStore = create<WalletState, [["zustand/immer", never]]>(
+export const useTransactionStore = create<
+  TransactionState,
+  [["zustand/immer", never]]
+>(
   immer((set) => ({
-    async initializeWallet() {
-      if (typeof mina === "undefined") {
-        throw new Error("Auro wallet not installed");
-      }
-
-      const [wallet] = await mina.getAccounts();
-
-      set((state) => {
-        state.wallet = wallet;
-      });
-    },
-    async connectWallet() {
-      if (typeof mina === "undefined") {
-        throw new Error("Auro wallet not installed");
-      }
-
-      const [wallet] = await mina.requestAccounts();
-
-      set((state) => {
-        state.wallet = wallet;
-      });
-    },
-    disconnect() {
-      set((state) => {
-        state.wallet = undefined;
-      });
-    },
-    observeWalletChange() {
-      if (typeof mina === "undefined") {
-        throw new Error("Auro wallet not installed");
-      }
-
-      mina.on("accountsChanged", ([wallet]) => {
-        set((state) => {
-          state.wallet = wallet;
-        });
-      });
-    },
-
     pendingTransactions: [] as PendingTransaction[],
     addPendingTransaction(pendingTransaction) {
       set((state) => {
@@ -82,18 +40,20 @@ export const useWalletStore = create<WalletState, [["zustand/immer", never]]>(
 );
 
 export const useNotifyTransactions = () => {
-  const wallet = useWalletStore();
+  const transactions = useTransactionStore();
   const chain = useChainStore();
   const { toast } = useToast();
   const client = useClientStore();
 
-  const previousPendingTransactions = usePrevious(wallet.pendingTransactions);
+  const previousPendingTransactions = usePrevious(
+    transactions.pendingTransactions,
+  );
   const newPendingTransactions = useMemo(() => {
-    return wallet.pendingTransactions.filter(
+    return transactions.pendingTransactions.filter(
       (pendingTransaction) =>
         !(previousPendingTransactions ?? []).includes(pendingTransaction),
     );
-  }, [wallet.pendingTransactions, previousPendingTransactions]);
+  }, [transactions.pendingTransactions, previousPendingTransactions]);
 
   const notifyTransaction = useCallback(
     (
@@ -169,19 +129,19 @@ export const useNotifyTransactions = () => {
 
     const confirmedPendingTransactions = confirmedTransactions?.filter(
       ({ tx }) => {
-        return wallet.pendingTransactions?.find((pendingTransaction) => {
+        return transactions.pendingTransactions?.find((pendingTransaction) => {
           return pendingTransaction.hash().toString() === tx.hash().toString();
         });
       },
     );
 
     confirmedPendingTransactions?.forEach(({ tx, status }) => {
-      wallet.removePendingTransaction(tx);
+      transactions.removePendingTransaction(tx);
       notifyTransaction(status ? "SUCCESS" : "FAILURE", tx);
     });
   }, [
     chain.block,
-    wallet.pendingTransactions,
+    transactions.pendingTransactions,
     client.client,
     notifyTransaction,
   ]);

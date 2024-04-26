@@ -2,11 +2,10 @@
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import { ModeToggle } from "@/components/mode-toggle";
-import { Wallet, Bookmark, Store, Gamepad2, Shapes, Bell } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import Web3wallet from "./web3wallet";
+import { Bookmark, Store, Gamepad2, Shapes, Bell } from "lucide-react";
+import Web3wallet from "./web3wallet/web3wallet";
 import Link from "next/link";
 import {
   DropdownMenu,
@@ -15,42 +14,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useToast } from "@/components/ui/use-toast";
-import useHasMounted from "@/lib/customHooks";
-import { fetchGameData } from "@/lib/api";
-import { useGamesStore } from "@/lib/stores/gameStore";
-// import { useWorkerStore } from "@/lib/stores/workerStore";
+import dynamic from "next/dynamic";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
+
+const ChainStatus = dynamic(() => import("./chainStatus"));
 
 export function Sidebar({ className }: SidebarProps) {
   const [currentPath, setCurrentPath] = useState<string>("/");
   const router = useRouter();
-  const gameStore = useGamesStore();
-  // const workerStore = useWorkerStore();
-  const hasMounted = useHasMounted();
-
-  const { toast } = useToast();
 
   const handleNavigate = (path: string) => {
     setCurrentPath(path);
     router.push(path);
   };
-
-  useMemo(() => {
-    fetchGameData().then((data) => gameStore.setGames(data));
-  }, []);
-
-  //   useEffect(() => {
-  //     if (hasMounted && workerStore.status === 0) {
-  //       workerStore.startWorker();
-  //       toast({
-  //         title: "Web workers loading",
-  //         description:
-  //           "Our web workers working hard to getting ready things up, computer's fans could speed up a little 😬",
-  //       });
-  //     }
-  //   }, [hasMounted]);
 
   return (
     <div
@@ -86,7 +63,6 @@ export function Sidebar({ className }: SidebarProps) {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-          {/* <h2 className="my-2 px-4 text-lg font-semibold tracking-tight">Marketplace</h2> */}
           <div className="my-2 space-y-1">
             <Button
               variant={
@@ -129,13 +105,7 @@ export function Sidebar({ className }: SidebarProps) {
         </div>
       </div>
       <div className="absolute bottom-4 flex w-full justify-between self-end px-6">
-        <ModeToggle />{" "}
-        <Badge
-          className=" items-center rounded-lg text-center"
-          variant="outline"
-        >
-          v0.0.1
-        </Badge>
+        <ModeToggle /> <ChainStatus />
       </div>
     </div>
   );

@@ -103,7 +103,7 @@ export const useChainStore = create<ChainState, [["zustand/immer", never]]>(
   })),
 );
 
-export const tickInterval = 1000;
+export const tickInterval = 5000;
 export const usePollBlockHeight = () => {
   const [tick, setTick] = useState(0);
   const chain = useChainStore();

@@ -6,7 +6,8 @@ import { Balance, BalancesKey, TokenId } from "@proto-kit/library";
 import { PublicKey, UInt64 } from "o1js";
 import { useCallback, useEffect } from "react";
 import { useChainStore } from "./chain";
-import { useWalletStore } from "./wallet";
+import { useTransactionStore } from "./transactionStore";
+import { useUserStore } from "./userWallet";
 
 export interface BalancesState {
   loading: boolean;
@@ -68,29 +69,30 @@ export const useBalancesStore = create<
 export const useObserveBalance = () => {
   const client = useClientStore();
   const chain = useChainStore();
-  const wallet = useWalletStore();
+  const wallet = useUserStore();
   const balances = useBalancesStore();
 
   useEffect(() => {
-    if (!client.client || !wallet.wallet) return;
+    if (!client.client || !wallet.isConnected) return;
 
-    balances.loadBalance(client.client, wallet.wallet);
-  }, [client.client, chain.block?.height, wallet.wallet]);
+    balances.loadBalance(client.client, wallet.userPublicKey || "");
+  }, [client.client, chain.block?.height, wallet.userPublicKey || ""]);
 };
 
 export const useFaucet = () => {
   const client = useClientStore();
   const balances = useBalancesStore();
-  const wallet = useWalletStore();
+  const wallet = useUserStore();
+  const transactions = useTransactionStore();
 
   return useCallback(async () => {
-    if (!client.client || !wallet.wallet) return;
+    if (!client.client || !wallet.isConnected) return;
 
     const pendingTransaction = await balances.faucet(
       client.client,
-      wallet.wallet,
+      wallet.userPublicKey || "",
     );
 
-    wallet.addPendingTransaction(pendingTransaction);
-  }, [client.client, wallet.wallet]);
+    transactions.addPendingTransaction(pendingTransaction);
+  }, [client.client, wallet.userPublicKey || ""]);
 };
