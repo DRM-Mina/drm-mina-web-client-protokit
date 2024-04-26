@@ -1,53 +1,32 @@
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardTitle,
 } from "@/components/ui/card";
-import { useChainStore } from "@/lib/stores/chain";
-import { useClientStore } from "@/lib/stores/client";
+import { useToast } from "@/components/ui/use-toast";
 import { useGamesStore } from "@/lib/stores/gameStore";
 import { useUserStore } from "@/lib/stores/userWallet";
-import { UInt64 } from "@proto-kit/library";
-import { UserKey } from "chain/dist/GameToken";
+import { Download } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { PublicKey } from "o1js";
-import React, { useEffect } from "react";
+import React from "react";
 
 const ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
 export default function DynamicLibrary() {
-  const client = useClientStore();
-  const chain = useChainStore();
   const router = useRouter();
   const userStore = useUserStore();
   const gameStore = useGamesStore();
 
-  useEffect(() => {
-    if (!client.client || !userStore.userPublicKey) return;
-    (async () => {
-      const totalGames =
-        await client.client!.query.runtime.GameToken.totalGameNumber.get();
-      const gameIds = Array.from(
-        { length: Number(totalGames?.toString()) },
-        (_, i) => i + 1,
-      );
-      let library: number[] = [];
-      for (const gameId of gameIds) {
-        const userKey = UserKey.from(
-          UInt64.from(gameId),
-          PublicKey.fromBase58(userStore.userPublicKey!),
-        );
-        const query =
-          await client.client!.query.runtime.GameToken.users.get(userKey);
-        if (query?.value) {
-          library.push(gameId);
-        }
-      }
-      userStore.setLibrary(library);
-    })();
-  }, [userStore.userPublicKey, client.client, chain.block?.height]);
+  const { toast } = useToast();
+
+  const handleGameDownload = () => {
+    toast({
+      title: "Download started",
+      description: "Just kidding we do not have this feature yet 🚀",
+    });
+  };
 
   return userStore.library.length === 0 ? (
     <div className=" flex w-full justify-center ">
@@ -63,34 +42,45 @@ export default function DynamicLibrary() {
       </h3>
     </div>
   ) : (
-    <div className=" flex w-full flex-wrap justify-center gap-4">
+    <div className=" flex w-full flex-col items-center justify-center gap-6">
+      <h3 className="mb-2 text-lg font-medium tracking-tight">Owned Games</h3>
       {gameStore.games
         .filter((game: Game) => userStore.library.includes(game.gameId))
         .map((game, index) => {
           return (
             <Card
               key={index}
-              className=" card-hover-effect mb-16 aspect-square w-[300px] cursor-pointer"
+              className=" card-hover-effect grid w-2/3 cursor-pointer grid-cols-8"
               onClick={() => router.push("/game-detail?game=" + game.name)}
             >
-              <CardContent className=" absolute flex aspect-square w-[300px] items-center justify-center p-4">
+              <CardContent className=" col-span-3 aspect-video items-center justify-center  p-4">
                 <img
                   src={ENDPOINT + game.cover}
                   crossOrigin="anonymous"
                   alt={game.name}
-                  className="card-image flex h-full w-full rounded-lg object-cover"
+                  className="flex h-full w-full rounded-lg object-cover"
                 />
               </CardContent>
-              <div className="card-drawer flex h-full flex-col items-center gap-3 bg-background p-3">
-                <CardTitle className="flex">{game.name}</CardTitle>
-                <CardDescription className=" flex">
+
+              <CardContent className=" col-span-3 items-center">
+                <CardTitle className=" pb-2 pt-6">{game.name}</CardTitle>
+                <CardDescription className="py-2">
                   {game.description}
                 </CardDescription>
-              </div>
-              <CardFooter className="mt-4 flex justify-between">
-                <h3 className="text-lg font-medium">{game.name}</h3>
-                <h3 className="text-lg font-medium">{game.price}</h3>
-              </CardFooter>
+              </CardContent>
+              <CardContent className=" col-span-2 flex items-center justify-center">
+                <Button
+                  className=" "
+                  variant={"link"}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    handleGameDownload();
+                  }}
+                >
+                  <Download size={24} />
+                  Download Game
+                </Button>
+              </CardContent>
             </Card>
           );
         })}
