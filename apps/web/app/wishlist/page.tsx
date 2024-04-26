@@ -9,7 +9,6 @@ import {
   CardFooter,
   CardTitle,
 } from "@/components/ui/card";
-import "./wishlist.css";
 import { useGamesStore } from "@/lib/stores/gameStore";
 import { useEffect } from "react";
 import { fetchWishlist } from "@/lib/api";
