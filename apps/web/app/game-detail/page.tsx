@@ -19,7 +19,9 @@ import dynamic from "next/dynamic";
 
 const ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
-const BuyGame = dynamic(() => import("./buyGame"));
+const BuyGame = dynamic(() => import("../components/buyGame"), {
+  loading: () => <Button>Loading...</Button>,
+});
 
 export default function GameDetail() {
   const gameName = useSearchParams().get("game");
@@ -45,7 +47,12 @@ export default function GameDetail() {
 
   const game = gameStore.games.find((game) => game.name === gameName);
 
-  const handleGameDownload = () => {};
+  const handleGameDownload = () => {
+    toast({
+      title: "Download started",
+      description: "Just kidding we do not have this feature yet 🚀",
+    });
+  };
 
   return (
     <div>
@@ -99,7 +106,34 @@ export default function GameDetail() {
             </div>
 
             <div className="flex flex-col items-center gap-4 ">
-              <BuyGame game={game} />
+              <div className=" mt-8 flex flex-row gap-4 rounded-lg border border-gray-300 p-2">
+                <div className=" flex items-center justify-center gap-1 ">
+                  {game?.discount || 0 > 0 ? (
+                    <>
+                      <div className=" text-discount bg-discount rounded-lg p-1 text-lg">
+                        -%
+                        {Math.floor(
+                          ((game?.discount || 0) / (game?.price || 1)) * 100,
+                        )}
+                      </div>
+                      <span className="strikethrough px-2 text-base text-gray-500">
+                        {game?.price}
+                      </span>
+                    </>
+                  ) : (
+                    <></>
+                  )}
+                  <span className="text-base">
+                    {game?.price! - game?.discount!}
+                  </span>
+                  <img
+                    src={"/mina.png"}
+                    alt="mina"
+                    className=" inline-block h-4 w-4"
+                  />
+                </div>
+                <BuyGame gameId={game?.gameId} />
+              </div>
               <Button variant={"link"} onClick={handleGameDownload}>
                 <Download size={24} />
                 Download Game

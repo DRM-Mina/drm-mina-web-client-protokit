@@ -20,14 +20,13 @@ import { useRouter } from "next/navigation";
 import { useGamesStore } from "@/lib/stores/gameStore";
 import GameBookmark from "./bookmark";
 import DiscountRate from "./discountRate";
-import { useToast } from "@/components/ui/use-toast";
+import BuyGame from "./buyGame";
 
 const ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
 export default function Featured() {
   const gameStore = useGamesStore();
   const router = useRouter();
-  const { toast } = useToast();
 
   return (
     <div className="col-span-3 row-span-1 flex justify-center py-8 lg:col-span-5">
@@ -83,17 +82,7 @@ export default function Featured() {
                           className=" inline-block h-5 w-5"
                         />
                       </CardShadow>
-                      <Button
-                        variant={"default"}
-                        onClick={(e) => {
-                          toast({
-                            description: "Soon",
-                          });
-                          e.stopPropagation();
-                        }}
-                      >
-                        Buy Game
-                      </Button>
+                      <BuyGame gameId={game.gameId} />
                     </div>
                   </CardFooter>
                 </Card>
