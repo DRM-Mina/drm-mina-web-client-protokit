@@ -8,6 +8,9 @@ interface UserState {
   userMinaBalance: number;
   wishlist: number[];
   library: number[];
+  gameId: number;
+  slotNames: string[];
+  slots: string[];
 
   setConnected: (connected: boolean) => void;
   setConnecting: (connecting: boolean) => void;
@@ -17,6 +20,7 @@ interface UserState {
   addWishlist: (gameId: number) => void;
   removeWishlist: (gameId: number) => void;
   setLibrary: (library: number[]) => void;
+  setSlots: (gameId: number, slotNames: string[], slots: string[]) => void;
   disconnect: () => void;
 }
 
@@ -27,6 +31,9 @@ export const useUserStore = create<UserState, [["zustand/immer", never]]>(
     userMinaBalance: 0,
     wishlist: [],
     library: [],
+    gameId: 0,
+    slotNames: [],
+    slots: [],
 
     setConnected(connected) {
       set((state) => {
@@ -66,6 +73,13 @@ export const useUserStore = create<UserState, [["zustand/immer", never]]>(
     setLibrary(library) {
       set((state) => {
         state.library = library;
+      });
+    },
+    setSlots(gameId, slotNames, slots) {
+      set((state) => {
+        state.gameId = gameId;
+        state.slotNames = slotNames;
+        state.slots = slots;
       });
     },
     disconnect() {
