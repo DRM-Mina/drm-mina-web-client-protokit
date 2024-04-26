@@ -8,6 +8,9 @@ import { useCallback } from "react";
 import { useUserStore } from "./userWallet";
 import { useTransactionStore } from "./transactionStore";
 import { useToast } from "@/components/ui/use-toast";
+import { useChainStore } from "./chain";
+import { useEffect } from "react";
+import { UserKey } from "chain/dist/GameToken";
 
 export interface MarketState {
   buyGame: (
@@ -70,4 +73,36 @@ export const useBuyGame = (gameId?: number) => {
 
     transactions.addPendingTransaction(pendingTransaction);
   }, [client.client, userStore.userPublicKey]);
+};
+
+export const useObserveLibrary = () => {
+  const client = useClientStore();
+  const chain = useChainStore();
+  const wallet = useUserStore();
+  const userStore = useUserStore();
+
+  useEffect(() => {
+    if (!client.client || !userStore.userPublicKey) return;
+    (async () => {
+      const totalGames =
+        await client.client!.query.runtime.GameToken.totalGameNumber.get();
+      const gameIds = Array.from(
+        { length: Number(totalGames?.toString()) },
+        (_, i) => i + 1,
+      );
+      let library: number[] = [];
+      for (const gameId of gameIds) {
+        const userKey = UserKey.from(
+          UInt64.from(gameId),
+          PublicKey.fromBase58(userStore.userPublicKey!),
+        );
+        const query =
+          await client.client!.query.runtime.GameToken.users.get(userKey);
+        if (query?.value) {
+          library.push(gameId);
+        }
+      }
+      userStore.setLibrary(library);
+    })();
+  }, [client.client, chain.block?.height, wallet.userPublicKey || ""]);
 };
