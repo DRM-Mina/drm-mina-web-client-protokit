@@ -12,13 +12,21 @@ import { useChainStore } from "./chain";
 import { useEffect } from "react";
 import { UserKey } from "chain/dist/GameToken";
 import { fetchSlotNames } from "../api";
-import { DeviceKey } from "chain/dist/DRM";
+import { DeviceIdentifierProof, DeviceKey } from "chain/dist/DRM";
 
 export interface MarketState {
   buyGame: (
     client: Client,
     address: string,
     gameId: number,
+  ) => Promise<PendingTransaction>;
+
+  assignDevice: (
+    client: Client,
+    address: string,
+    gameId: number,
+    slot: number,
+    deviceProof: DeviceIdentifierProof,
   ) => Promise<PendingTransaction>;
 }
 
@@ -39,6 +47,31 @@ export const useMarketStore = create<MarketState, [["zustand/immer", never]]>(
 
       const tx = await client.transaction(sender, () => {
         gameToken.buyGame(UInt64.from(gameId));
+      });
+
+      await tx.sign();
+      await tx.send();
+
+      isPendingTransaction(tx.transaction);
+      return tx.transaction;
+    },
+
+    async assignDevice(client, address, gameId, slot, deviceProof) {
+      const drm = client.runtime.resolve("DRM");
+      const sender = PublicKey.fromBase58(address);
+
+      console.log("Assigning device", gameId, slot);
+
+      console.log("Proof: ", deviceProof);
+
+      console.log("Device: ", deviceProof.publicOutput.toString());
+
+      const tx = await client.transaction(sender, () => {
+        drm.addOrChangeDevice(
+          deviceProof,
+          UInt64.from(gameId),
+          UInt64.from(slot),
+        );
       });
 
       await tx.sign();
@@ -71,6 +104,38 @@ export const useBuyGame = (gameId?: number) => {
       client.client,
       userStore.userPublicKey,
       gameId,
+    );
+
+    transactions.addPendingTransaction(pendingTransaction);
+  }, [client.client, userStore.userPublicKey]);
+};
+
+export const useAssignDevice = (
+  gameId: number,
+  slot: number,
+  deviceProof: DeviceIdentifierProof,
+) => {
+  const client = useClientStore();
+  const marketStore = useMarketStore();
+  const transactions = useTransactionStore();
+  const userStore = useUserStore();
+  const { toast } = useToast();
+
+  return useCallback(async () => {
+    if (userStore.isConnected === false) {
+      toast({
+        title: "Wallet not connected",
+        description: "Please connect your wallet",
+      });
+      return;
+    }
+    if (!client.client || !userStore.userPublicKey || !gameId) return;
+    const pendingTransaction = await marketStore.assignDevice(
+      client.client,
+      userStore.userPublicKey,
+      gameId,
+      slot,
+      deviceProof,
     );
 
     transactions.addPendingTransaction(pendingTransaction);
