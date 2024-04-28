@@ -3,7 +3,7 @@ import { Client, useClientStore } from "./client";
 import { immer } from "zustand/middleware/immer";
 import { PendingTransaction, UnsignedTransaction } from "@proto-kit/sequencer";
 import { TokenId, UInt64 } from "@proto-kit/library";
-import { PublicKey } from "o1js";
+import { Field, JsonProof, PublicKey } from "o1js";
 import { useCallback } from "react";
 import { useUserStore } from "./userWallet";
 import { useTransactionStore } from "./transactionStore";
@@ -26,7 +26,7 @@ export interface MarketState {
     address: string,
     gameId: number,
     slot: number,
-    deviceProof: DeviceIdentifierProof,
+    deviceProofStringify: string,
   ) => Promise<PendingTransaction>;
 }
 
@@ -56,15 +56,12 @@ export const useMarketStore = create<MarketState, [["zustand/immer", never]]>(
       return tx.transaction;
     },
 
-    async assignDevice(client, address, gameId, slot, deviceProof) {
+    async assignDevice(client, address, gameId, slot, deviceProofStringify) {
       const drm = client.runtime.resolve("DRM");
       const sender = PublicKey.fromBase58(address);
-
-      console.log("Assigning device", gameId, slot);
-
-      console.log("Proof: ", deviceProof);
-
-      console.log("Device: ", deviceProof.publicOutput.toString());
+      const deviceProof = DeviceIdentifierProof.fromJSON(
+        JSON.parse(deviceProofStringify) as JsonProof,
+      );
 
       const tx = await client.transaction(sender, () => {
         drm.addOrChangeDevice(
@@ -113,7 +110,7 @@ export const useBuyGame = (gameId?: number) => {
 export const useAssignDevice = (
   gameId: number,
   slot: number,
-  deviceProof: DeviceIdentifierProof,
+  deviceProofStringify: string,
 ) => {
   const client = useClientStore();
   const marketStore = useMarketStore();
@@ -135,7 +132,7 @@ export const useAssignDevice = (
       userStore.userPublicKey,
       gameId,
       slot,
-      deviceProof,
+      deviceProofStringify,
     );
 
     transactions.addPendingTransaction(pendingTransaction);
@@ -208,9 +205,17 @@ export const useObserveSlots = (gameId: number) => {
         );
         const slotQuery =
           await client.client!.query.runtime.DRM.devices.get(deviceKey);
-        if (slotQuery?.value) slotArray = slotQuery.value;
-        else slotArray = Array.from({ length: slotCount }, (_, i) => "Empty");
-        console.log("SET LIBRARY: ", gameId);
+
+        if (slotQuery) {
+          for (let i = 1; i <= slotCount; i++) {
+            const device = Field.from(slotQuery[`device_${i}`]);
+            slotArray.push(
+              device.toString() === "0"
+                ? "Empty"
+                : device.toString().slice(0, 6) + "...",
+            );
+          }
+        }
         userStore.setSlots(gameId, slotNamesArray, slotArray);
       }
     })();

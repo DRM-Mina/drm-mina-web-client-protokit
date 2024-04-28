@@ -14,10 +14,10 @@ export default class WorkerClient {
     rawIdentifiers,
   }: {
     rawIdentifiers: RawIdentifiers;
-  }): Promise<DeviceIdentifierProof> {
+  }): Promise<any> {
     return this._call("createDeviceIdentifierProof", {
       rawIdentifiers,
-    }) as Promise<DeviceIdentifierProof>;
+    }) as Promise<any>;
   }
 
   worker: Worker;

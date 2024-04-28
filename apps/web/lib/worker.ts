@@ -4,6 +4,7 @@ import {
   DeviceIdentifier,
   DeviceSessionInput,
   DeviceSessionOutput,
+  DeviceIdentifierProof,
 } from "chain/dist/DRM.js";
 
 const state = {
@@ -26,9 +27,9 @@ const functions = {
     }
 
     const identifiers = Identifiers.fromRaw(args.rawIdentifiers);
-    const proof =
+    const proof: DeviceIdentifierProof =
       await state.deviceIdentifierProgram.proofForDevice(identifiers);
-    return proof;
+    return JSON.stringify(proof.toJSON(), null, 2);
   },
 };
 export type WorkerFunctions = keyof typeof functions;

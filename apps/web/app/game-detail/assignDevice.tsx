@@ -45,7 +45,6 @@ export default function AssignDevice({ gameId }: AssignDeviceProps) {
           "Our web workers working hard to getting ready things up, computer's fans could speed up a little 😬",
       });
       (async () => {
-        console.log("Starting worker");
         await workerStore.startWorker();
 
         toast({
@@ -123,38 +122,20 @@ export default function AssignDevice({ gameId }: AssignDeviceProps) {
                       }
 
                       (async () => {
-                        console.log("Assigning device: ", deviceStore.device);
-                        const deviceProof =
+                        const deviceProofStringify =
                           await workerStore.worker?.createDeviceIdentifierProof(
                             {
                               rawIdentifiers: deviceStore.device,
                             },
                           );
-                        const computedIdentifiers = Identifiers.fromRaw(
-                          deviceStore.device,
-                        );
-                        console.log(
-                          "Computed Identifiers: ",
-                          computedIdentifiers,
-                        );
-                        console.log(
-                          "Computed Hash: ",
-                          computedIdentifiers.hash().toString(),
-                        );
-
-                        console.log("Proof: ", deviceProof);
-                        console.log(
-                          "Proof Hash: ",
-                          deviceProof?.publicOutput.toString(),
-                        );
-                        if (deviceProof) {
+                        if (deviceProofStringify) {
                           const pendingTransaction =
                             await marketStore.assignDevice(
-                              client.client,
+                              client.client!,
                               userStore.userPublicKey!,
                               gameId,
                               index + 1,
-                              deviceProof,
+                              deviceProofStringify,
                             );
 
                           transactions.addPendingTransaction(
