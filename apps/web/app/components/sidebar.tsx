@@ -41,7 +41,7 @@ export function Sidebar({ className }: SidebarProps) {
           <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
             <Link href="/" className="flex items-center gap-2 font-semibold">
               <Gamepad2 className="h-6 w-6" />
-              <span className="">DRM Mina</span>
+              <span>DRM Mina</span>
             </Link>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

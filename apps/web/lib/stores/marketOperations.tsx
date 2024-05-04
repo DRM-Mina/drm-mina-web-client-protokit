@@ -141,13 +141,15 @@ export const useAssignDevice = (
 
 export const useObserveLibrary = () => {
   const client = useClientStore();
-  const chain = useChainStore();
+  // const chain = useChainStore();
   const wallet = useUserStore();
   const userStore = useUserStore();
+  const transactions = useTransactionStore();
 
   useEffect(() => {
     if (!client.client || !userStore.userPublicKey) return;
     (async () => {
+      console.log("Observe Library");
       const totalGames =
         await client.client!.query.runtime.GameToken.totalGameNumber.get();
       const gameIds = Array.from(
@@ -168,14 +170,15 @@ export const useObserveLibrary = () => {
       }
       userStore.setLibrary(library);
     })();
-  }, [client.client, chain.block?.height, wallet.userPublicKey || ""]);
+  }, [client.client, transactions, wallet.userPublicKey || ""]);
 };
 
 export const useObserveSlots = (gameId: number) => {
   const client = useClientStore();
-  const chain = useChainStore();
+  // const chain = useChainStore();
   const wallet = useUserStore();
   const userStore = useUserStore();
+  const transactions = useTransactionStore();
 
   useEffect(() => {
     if (
@@ -219,5 +222,5 @@ export const useObserveSlots = (gameId: number) => {
         userStore.setSlots(gameId, slotNamesArray, slotArray);
       }
     })();
-  }, [client.client, chain.block?.height, wallet.userPublicKey || ""]);
+  }, [client.client, transactions, wallet.userPublicKey || ""]);
 };
