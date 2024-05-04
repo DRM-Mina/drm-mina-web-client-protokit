@@ -5,7 +5,7 @@ import { PendingTransaction, UnsignedTransaction } from "@proto-kit/sequencer";
 import { Balance, BalancesKey, TokenId } from "@proto-kit/library";
 import { PublicKey, UInt64 } from "o1js";
 import { useCallback, useEffect } from "react";
-import { useChainStore } from "./chain";
+// import { useChainStore } from "./chain";
 import { useTransactionStore } from "./transactionStore";
 import { useUserStore } from "./userWallet";
 
@@ -68,15 +68,16 @@ export const useBalancesStore = create<
 
 export const useObserveBalance = () => {
   const client = useClientStore();
-  const chain = useChainStore();
+  // const chain = useChainStore();
   const wallet = useUserStore();
   const balances = useBalancesStore();
+  const transactions = useTransactionStore();
 
   useEffect(() => {
     if (!client.client || !wallet.isConnected) return;
 
     balances.loadBalance(client.client, wallet.userPublicKey || "");
-  }, [client.client, chain.block?.height, wallet.userPublicKey || ""]);
+  }, [client.client, transactions, wallet.userPublicKey || ""]);
 };
 
 export const useFaucet = () => {

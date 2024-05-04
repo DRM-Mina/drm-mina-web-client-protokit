@@ -2,9 +2,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { postSlotNames } from "@/lib/api";
+import useHasMounted from "@/lib/customHooks";
+import { useClientStore } from "@/lib/stores/client";
 import { useDeviceStore } from "@/lib/stores/deviceStore";
-import { useObserveSlots } from "@/lib/stores/marketOperations";
+import { useMarketStore, useObserveSlots } from "@/lib/stores/marketOperations";
+import { useTransactionStore } from "@/lib/stores/transactionStore";
 import { useUserStore } from "@/lib/stores/userWallet";
+import { useWorkerStore } from "@/lib/stores/workerStore";
+import { Identifiers } from "chain/dist/lib/identifiers";
 import React, { useEffect, useState } from "react";
 
 interface AssignDeviceProps {
@@ -14,6 +19,10 @@ interface AssignDeviceProps {
 export default function AssignDevice({ gameId }: AssignDeviceProps) {
   const userStore = useUserStore();
   const deviceStore = useDeviceStore();
+  const workerStore = useWorkerStore();
+  const marketStore = useMarketStore();
+  const transactions = useTransactionStore();
+  const client = useClientStore();
   const [slotNames, setSlotNames] = useState<string[]>([]);
 
   const { toast } = useToast();
@@ -22,6 +31,29 @@ export default function AssignDevice({ gameId }: AssignDeviceProps) {
   useEffect(() => {
     setSlotNames(userStore.slotNames);
   }, [userStore.slotNames, userStore.userPublicKey]);
+
+  const hasMounted = useHasMounted();
+  useEffect(() => {
+    if (
+      hasMounted &&
+      !workerStore.isReady
+      // && deviceStore.isDeviceSet
+    ) {
+      toast({
+        title: "Web workers loading",
+        description:
+          "Our web workers working hard to getting ready things up, computer's fans could speed up a little 😬",
+      });
+      (async () => {
+        await workerStore.startWorker();
+
+        toast({
+          title: "Web workers loaded",
+          description: "Web workers are ready",
+        });
+      })();
+    }
+  }, [hasMounted]);
 
   return (
     <div className=" col-span-3">
@@ -79,6 +111,38 @@ export default function AssignDevice({ gameId }: AssignDeviceProps) {
                         });
                         return;
                       }
+
+                      if (!workerStore.isReady) {
+                        toast({
+                          title: "Web workers not ready",
+                          description:
+                            "Please wait for the web workers to get ready",
+                        });
+                        return;
+                      }
+
+                      (async () => {
+                        const deviceProofStringify =
+                          await workerStore.worker?.createDeviceIdentifierProof(
+                            {
+                              rawIdentifiers: deviceStore.device,
+                            },
+                          );
+                        if (deviceProofStringify) {
+                          const pendingTransaction =
+                            await marketStore.assignDevice(
+                              client.client!,
+                              userStore.userPublicKey!,
+                              gameId,
+                              index + 1,
+                              deviceProofStringify,
+                            );
+
+                          transactions.addPendingTransaction(
+                            pendingTransaction,
+                          );
+                        }
+                      })();
                     }}
                   >
                     Assign This
