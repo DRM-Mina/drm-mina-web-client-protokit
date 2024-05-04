@@ -3,8 +3,38 @@ import { fetchGameData } from "@/lib/api";
 import { useChainStore } from "@/lib/stores/chain";
 import { useClientStore } from "@/lib/stores/client";
 import { useGamesStore } from "@/lib/stores/gameStore";
-import { UInt64 } from "@proto-kit/library";
+// import { UInt64 } from "@proto-kit/library";
 import React, { useEffect } from "react";
+
+const query = `
+query GetPrices {
+  runtime {
+    GameToken {
+      gamePrice(key: {value: "$gameId"}) {
+        value
+      }
+      discount(key: {value: "$gameId"}) {
+        value
+      }
+    }
+  }
+}
+`;
+
+interface GamePrices {
+  data: {
+    runtime: {
+      GameToken: {
+        gamePrice: {
+          value: string | null;
+        };
+        discount: {
+          value: string | null;
+        };
+      };
+    };
+  };
+}
 
 export default function ChainStatus() {
   const client = useClientStore();
@@ -22,20 +52,38 @@ export default function ChainStatus() {
         (_, i) => i + 1,
       );
       for (const gameId of gameIds) {
-        const price =
-          await client.client!.query.runtime.GameToken.gamePrice.get(
-            UInt64.from(gameId),
+        // const price =
+        //   await client.client!.query.runtime.GameToken.gamePrice.get(
+        //     UInt64.from(gameId),
+        //   );
+        // const discount =
+        //   await client.client!.query.runtime.GameToken.discount.get(
+        //     UInt64.from(gameId),
+        //   );
+        const response = await fetch("http://localhost:8080/graphql", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            query: query.replace(/\$gameId/g, gameId.toString()),
+          }),
+        });
+
+        const { data } = (await response.json()) as GamePrices;
+
+        if (
+          data.runtime.GameToken.discount?.value &&
+          data.runtime.GameToken.gamePrice?.value
+        ) {
+          games[gameId - 1].price = Number(
+            data.runtime.GameToken.gamePrice?.value.toString(),
           );
-        const discount =
-          await client.client!.query.runtime.GameToken.discount.get(
-            UInt64.from(gameId),
+          games[gameId - 1].discount = Number(
+            data.runtime.GameToken.discount?.value.toString(),
           );
-        if (price?.value && discount?.value) {
-          games[gameId - 1].price = Number(price.value.toString());
-          games[gameId - 1].discount = Number(discount.value.toString());
         }
       }
-      console.log("games fetched from chain");
       gameStore.setGames(games);
       const discounts = games.filter((game: Game) => game.discount > 0);
       gameStore.setDiscountGames(discounts);
