@@ -48,10 +48,10 @@ export default function Browse() {
             />
           </CardContent>
           <div className="card-drawer flex h-full flex-col items-center gap-3 bg-background p-3">
-            <CardTitle className="flex">{game.name}</CardTitle>
+            {/* <CardTitle className="flex">{game.name}</CardTitle>
             <CardDescription className=" flex">
               {game.description}
-            </CardDescription>
+            </CardDescription> */}
           </div>
           <CardFooter className="mt-4 flex justify-between">
             <h3 className="text-lg font-medium">{game.name}</h3>
