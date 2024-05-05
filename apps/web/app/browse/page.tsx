@@ -37,7 +37,7 @@ export default function Browse() {
         <Card
           key={game.gameId}
           className=" mb-16 aspect-square w-[300px] cursor-pointer"
-          onClick={() => router.push("/game-detail?" + game.name)}
+          onClick={() => router.push("/game-detail?game=" + game.name)}
         >
           <CardContent className=" absolute flex aspect-square w-[300px] items-center justify-center p-4">
             <img
