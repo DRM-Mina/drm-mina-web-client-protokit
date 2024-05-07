@@ -51,7 +51,10 @@ export const useChainStore = create<ChainState, [["zustand/immer", never]]>(
         state.loading = true;
       });
 
-      const response = await fetch("http://localhost:8080/graphql", {
+      const url =
+        process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
+        "http://localhost:8080/graphql";
+      const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

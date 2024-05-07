@@ -60,7 +60,10 @@ export default function ChainStatus() {
         //   await client.client!.query.runtime.GameToken.discount.get(
         //     UInt64.from(gameId),
         //   );
-        const response = await fetch("http://localhost:8080/graphql", {
+        const url =
+          process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
+          "http://localhost:8080/graphql";
+        const response = await fetch(url, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
