@@ -1,11 +1,5 @@
 "use client";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { useGamesStore } from "@/lib/stores/gameStore";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -47,12 +41,7 @@ export default function Browse() {
               className="flex h-full w-full rounded-lg object-cover"
             />
           </CardContent>
-          <div className="card-drawer flex h-full flex-col items-center gap-3 bg-background p-3">
-            {/* <CardTitle className="flex">{game.name}</CardTitle>
-            <CardDescription className=" flex">
-              {game.description}
-            </CardDescription> */}
-          </div>
+          <div className="card-drawer flex h-full flex-col items-center gap-3 bg-background p-3"></div>
           <CardFooter className="mt-4 flex justify-between">
             <h3 className="text-lg font-medium">{game.name}</h3>
             <h3 className="text-lg font-medium">{game.price}</h3>
