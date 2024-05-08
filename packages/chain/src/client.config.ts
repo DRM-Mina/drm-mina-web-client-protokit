@@ -2,7 +2,7 @@ import { ClientAppChain } from "@proto-kit/sdk";
 import runtime from "./runtime";
 
 const appChain = ClientAppChain.fromRuntime(runtime.modules);
-const url = "https://167.71.35.19/graphql";
+const url = "https://drmmina_chain.kadircan.org/graphql";
 appChain.configurePartial({
     Runtime: runtime.config,
     GraphqlClient: {
