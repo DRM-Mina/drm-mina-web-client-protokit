@@ -2,7 +2,6 @@ const ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
 export async function fetchGameData() {
   const headers = { "Content-Type": "application/json" };
-  console.log(ENDPOINT);
   const res = await fetch(ENDPOINT + "game-data", { headers, method: "GET" });
   const json = await res.json();
   if (json.errors) {
@@ -18,8 +17,6 @@ export async function toggleGameWishlist(
 ): Promise<boolean> {
   const headers = { "Content-Type": "application/json" };
 
-  console.log("wishlist", userPubKey, gameId);
-
   const res = await fetch(ENDPOINT + "wishlist/" + userPubKey, {
     headers,
     method: "POST",
@@ -34,7 +31,7 @@ export async function toggleGameWishlist(
     throw new Error("Failed to add wishlist API");
   }
 
-  if (status == 201) {
+  if (status == 200) {
     return false;
   } else {
     return true;
@@ -92,11 +89,10 @@ export async function postSlotNames(
   const status = res.status;
 
   if (json.errors) {
-    console.error(json.errors);
     throw new Error("Failed to post slot names API");
   }
 
-  if (status == 201) {
+  if (status == 200) {
     return true;
   } else {
     return false;
