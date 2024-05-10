@@ -32,9 +32,9 @@ export async function toggleGameWishlist(
   }
 
   if (status == 200) {
-    return false;
-  } else {
     return true;
+  } else {
+    return false;
   }
 }
 
