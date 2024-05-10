@@ -149,7 +149,6 @@ export const useObserveLibrary = () => {
   useEffect(() => {
     if (!client.client || !userStore.userPublicKey) return;
     (async () => {
-      console.log("Observe Library");
       const totalGames =
         await client.client!.query.runtime.GameToken.totalGameNumber.get();
       const gameIds = Array.from(
@@ -202,7 +201,6 @@ export const useObserveSlots = (gameId: number) => {
           userStore.userPublicKey!,
           gameId,
         );
-        console.log("Slot Names Array", slotNamesArray);
         slotNamesArray = slotNamesArray.slice(0, slotCount);
 
         let slotArray: string[] = [];
@@ -228,7 +226,6 @@ export const useObserveSlots = (gameId: number) => {
             slotArray.push("Empty");
           }
         }
-        console.log("setting slots", gameId, slotNamesArray, slotArray);
         userStore.setSlots(gameId, slotNamesArray, slotArray);
       }
     })();

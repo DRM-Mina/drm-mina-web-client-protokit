@@ -29,12 +29,12 @@ export const useWorkerStore = create<
       console.log("Worker starting");
 
       if (this.isLoading) {
-        console.log("Worker already loading");
+        // console.log("Worker already loading");
         return;
       }
 
       if (this.isReady) {
-        console.log("Worker already ready");
+        // console.log("Worker already ready");
         return;
       }
 

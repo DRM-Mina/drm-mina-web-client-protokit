@@ -62,12 +62,6 @@ export default function AssignDevice({ gameId }: AssignDeviceProps) {
   }, [hasMounted]);
 
   useEffect(() => {
-    console.log(
-      userStore.isConnected,
-      userStore.library,
-      userStore.gameId,
-      workerStore.isReady,
-    );
     if (
       // TODO: enable in prod
       // deviceStore.isDeviceSet &&
