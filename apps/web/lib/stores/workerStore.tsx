@@ -5,6 +5,7 @@ import WorkerClient from "../workerClient";
 
 interface WorkerStoreState {
   isReady: boolean;
+  isLoading: boolean;
   worker?: WorkerClient;
   startWorker: () => Promise<void>;
 }
@@ -23,8 +24,23 @@ export const useWorkerStore = create<
 >(
   immer((set) => ({
     isReady: false,
+    isLoading: false,
     async startWorker() {
       console.log("Worker starting");
+
+      if (this.isLoading) {
+        console.log("Worker already loading");
+        return;
+      }
+
+      if (this.isReady) {
+        console.log("Worker already ready");
+        return;
+      }
+
+      set((state) => {
+        state.isLoading = true;
+      });
       const worker = new WorkerClient();
 
       await timeout(5);
