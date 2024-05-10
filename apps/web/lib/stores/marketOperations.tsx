@@ -149,7 +149,6 @@ export const useObserveLibrary = () => {
   useEffect(() => {
     if (!client.client || !userStore.userPublicKey) return;
     (async () => {
-      console.log("Observe Library");
       const totalGames =
         await client.client!.query.runtime.GameToken.totalGameNumber.get();
       const gameIds = Array.from(
@@ -170,12 +169,15 @@ export const useObserveLibrary = () => {
       }
       userStore.setLibrary(library);
     })();
-  }, [client.client, transactions, wallet.userPublicKey || ""]);
+  }, [
+    client.client,
+    transactions.pendingTransactions,
+    wallet.userPublicKey || "",
+  ]);
 };
 
 export const useObserveSlots = (gameId: number) => {
   const client = useClientStore();
-  // const chain = useChainStore();
   const wallet = useUserStore();
   const userStore = useUserStore();
   const transactions = useTransactionStore();
@@ -185,8 +187,9 @@ export const useObserveSlots = (gameId: number) => {
       !client.client ||
       !userStore.userPublicKey ||
       !userStore.library.includes(gameId)
-    )
+    ) {
       return;
+    }
     (async () => {
       const slotCountQuery =
         await client.client!.query.runtime.GameToken.number_of_devices_allowed.get(
@@ -218,9 +221,18 @@ export const useObserveSlots = (gameId: number) => {
                 : device.toString().slice(0, 6) + "...",
             );
           }
+        } else {
+          for (let i = 0; i < slotCount; i++) {
+            slotArray.push("Empty");
+          }
         }
         userStore.setSlots(gameId, slotNamesArray, slotArray);
       }
     })();
-  }, [client.client, transactions, wallet.userPublicKey || ""]);
+  }, [
+    client.client,
+    userStore.library,
+    transactions.pendingTransactions,
+    wallet.userPublicKey || "",
+  ]);
 };

@@ -22,6 +22,7 @@
     "@radix-ui/react-tooltip": "^1.0.7",
     "@tailwindcss/typography": "^0.5.10",
     "@uidotdev/usehooks": "^2.4.1",
+    "aws-sdk": "^2.1617.0",
     "chain": "workspace:*",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
@@ -56,10 +57,10 @@
     "typescript": "^5"
   },
   "peerDependencies": {
+    "@proto-kit/library": "*",
     "@proto-kit/module": "*",
     "@proto-kit/sdk": "*",
     "@proto-kit/sequencer": "*",
-    "@proto-kit/library": "*",
     "o1js": "0.13.1",
     "tsyringe": "^4.7.0"
   }

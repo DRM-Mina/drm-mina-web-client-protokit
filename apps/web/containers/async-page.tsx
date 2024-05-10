@@ -6,9 +6,8 @@ import Store from "@/app/store/page";
 
 export default function Home() {
   const gameName = useSearchParams()?.get("game");
-  console.log("gameName", gameName);
+
   const device = useSearchParams()?.get("device");
-  console.log("device", device);
 
   const router = useRouter();
   const deviceStore = useDeviceStore();

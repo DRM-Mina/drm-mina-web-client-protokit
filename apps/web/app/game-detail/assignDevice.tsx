@@ -9,7 +9,6 @@ import { useMarketStore, useObserveSlots } from "@/lib/stores/marketOperations";
 import { useTransactionStore } from "@/lib/stores/transactionStore";
 import { useUserStore } from "@/lib/stores/userWallet";
 import { useWorkerStore } from "@/lib/stores/workerStore";
-import { Identifiers } from "chain/dist/lib/identifiers";
 import React, { useEffect, useState } from "react";
 
 interface AssignDeviceProps {
@@ -24,6 +23,8 @@ export default function AssignDevice({ gameId }: AssignDeviceProps) {
   const transactions = useTransactionStore();
   const client = useClientStore();
   const [slotNames, setSlotNames] = useState<string[]>([]);
+  const [canAssign, setCanAssign] = useState<boolean>(false);
+  const [isAssigning, setIsAssigning] = useState<boolean>(false);
 
   const { toast } = useToast();
   useObserveSlots(gameId);
@@ -37,6 +38,7 @@ export default function AssignDevice({ gameId }: AssignDeviceProps) {
     if (
       hasMounted &&
       !workerStore.isReady
+      // TODO: enable in prod
       // && deviceStore.isDeviceSet
     ) {
       toast({
@@ -45,6 +47,10 @@ export default function AssignDevice({ gameId }: AssignDeviceProps) {
           "Our web workers working hard to getting ready things up, computer's fans could speed up a little 😬",
       });
       (async () => {
+        if (workerStore.isLoading || workerStore.isReady) {
+          return;
+        }
+
         await workerStore.startWorker();
 
         toast({
@@ -55,11 +61,27 @@ export default function AssignDevice({ gameId }: AssignDeviceProps) {
     }
   }, [hasMounted]);
 
+  useEffect(() => {
+    if (
+      // TODO: enable in prod
+      // deviceStore.isDeviceSet &&
+      workerStore.isReady &&
+      userStore.isConnected &&
+      userStore.library.includes(gameId) &&
+      userStore.gameId === gameId
+    ) {
+      setCanAssign(true);
+    }
+  }, [
+    userStore.isConnected,
+    userStore.library,
+    userStore.gameId,
+    workerStore.isReady,
+  ]);
+
   return (
     <div className=" col-span-3">
-      {userStore.isConnected &&
-      userStore.library.includes(gameId) &&
-      userStore.gameId === gameId ? (
+      {canAssign ? (
         <div className=" grid h-full w-full grid-cols-4 p-4">
           {userStore.slotNames.map((_, index) => {
             return (
@@ -70,7 +92,7 @@ export default function AssignDevice({ gameId }: AssignDeviceProps) {
                 <Input
                   className=" row-span-1 "
                   type="text"
-                  value={slotNames[index]}
+                  value={slotNames[index] || ""}
                   placeholder="Give a name"
                   onChange={(event) => {
                     const newSlotNames = [...slotNames];
@@ -101,7 +123,9 @@ export default function AssignDevice({ gameId }: AssignDeviceProps) {
                 <div className=" row-span-1 flex w-full flex-col items-center justify-center gap-2">
                   <h3 className=" text-center">{userStore.slots[index]}</h3>
                   <Button
+                    key={index + 1}
                     variant={"secondary"}
+                    disabled={isAssigning}
                     onClick={() => {
                       if (!deviceStore.isDeviceSet) {
                         toast({
@@ -120,6 +144,20 @@ export default function AssignDevice({ gameId }: AssignDeviceProps) {
                         });
                         return;
                       }
+
+                      if (!client.client || !userStore.userPublicKey || !gameId)
+                        return;
+
+                      if (isAssigning) {
+                        toast({
+                          title: "Still assigning",
+                          description:
+                            "Please wait for the previous assignment to complete",
+                        });
+                        return;
+                      }
+
+                      setIsAssigning(true);
 
                       (async () => {
                         const deviceProofStringify =
@@ -142,10 +180,11 @@ export default function AssignDevice({ gameId }: AssignDeviceProps) {
                             pendingTransaction,
                           );
                         }
+                        setIsAssigning(false);
                       })();
                     }}
                   >
-                    Assign This
+                    {isAssigning ? "Assigning" : "Assign This"}
                   </Button>
                 </div>
               </div>

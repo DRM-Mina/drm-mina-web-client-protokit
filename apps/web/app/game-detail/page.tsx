@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect } from "react";
-
 import Autoplay from "embla-carousel-autoplay";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -51,7 +50,7 @@ export default function GameDetail() {
 
   const game = gameStore.games.find((game) => game.name === gameName);
 
-  const handleGameDownload = () => {
+  const handleGameDownload = async () => {
     toast({
       title: "Download started",
       description: "Just kidding we do not have this feature yet 🚀",
@@ -139,8 +138,7 @@ export default function GameDetail() {
                 <BuyGame gameId={game?.gameId} />
               </div>
               <Button variant={"link"} onClick={handleGameDownload}>
-                <Download size={24} />
-                Download Game
+                <Download size={24} /> &nbsp; Download Game
               </Button>
             </div>
           </div>
