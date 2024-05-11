@@ -104,11 +104,7 @@ export default function SearchBar() {
               className=" items-left row-span-1 mt-2 justify-start pl-1"
               variant="link"
               onClick={() => {
-                toast({
-                  title: "Download started",
-                  description:
-                    "Just kidding we don't have this yet, use Linux 🤧",
-                });
+                handleDownload("DrmMinaClient Setup 1.1.0.exe");
               }}
             >
               <Download size={24} /> &nbsp;Windows App
