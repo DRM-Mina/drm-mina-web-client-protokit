@@ -50,11 +50,66 @@ export default function GameDetail() {
 
   const game = gameStore.games.find((game) => game.name === gameName);
 
-  const handleGameDownload = async () => {
-    toast({
-      title: "Download started",
-      description: "Just kidding we do not have this feature yet 🚀",
-    });
+  const handleGameDownload = async (gameId: number) => {
+    if (gameId !== 1) {
+      toast({
+        title: "Download started",
+        description:
+          "Just kidding we do not have this game yet, maybe in the future 🤷‍♂️",
+      });
+      return;
+    } else if (gameId === 1) {
+      toast({
+        title: "Download started",
+        description:
+          "Please wait while we prepare the download link for you 🚀",
+      });
+      try {
+        const signedUrlResponse = await fetch(
+          process.env.NEXT_PUBLIC_API_ENDPOINT + "get-signed-url",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              fileName: "Game-Demo.exe",
+            }),
+          },
+        );
+
+        if (!signedUrlResponse.ok) {
+          throw new Error("Failed to get signed url");
+        }
+
+        const { url } = await signedUrlResponse.json();
+
+        const downloadResponse = await fetch(url);
+        if (!downloadResponse.ok) {
+          throw new Error("Failed to download file");
+        }
+        const blob = await downloadResponse.blob();
+        const urlBlob = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = urlBlob;
+        a.download = "Game-Demo.exe";
+        a.click();
+        URL.revokeObjectURL(urlBlob);
+
+        toast({
+          title: "Download complete",
+          description:
+            "Please check your download folder 😏, ensure you cloned our prover too :)",
+        });
+      } catch (error) {
+        console.error(error);
+        toast({
+          title: "Failed to download",
+          description: "Sowwy 😢, please try again later.",
+        });
+      }
+    }
+    return;
   };
 
   return (
@@ -137,7 +192,12 @@ export default function GameDetail() {
                 </div>
                 <BuyGame gameId={game?.gameId} />
               </div>
-              <Button variant={"link"} onClick={handleGameDownload}>
+              <Button
+                variant={"link"}
+                onClick={() => {
+                  handleGameDownload(game?.gameId!);
+                }}
+              >
                 <Download size={24} /> &nbsp; Download Game
               </Button>
             </div>
