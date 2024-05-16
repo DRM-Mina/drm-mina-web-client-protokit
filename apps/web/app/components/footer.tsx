@@ -55,8 +55,18 @@ export default function Footer({ className }: FooterProps) {
           </div>
 
           <div className="flex items-center gap-4">
-            <img src={"mina.svg"} alt="Mina Logo" className="h-6 " />
-            <span className="text-sm">Powered by Mina</span>
+            <img src={"mina.svg"} alt="Mina Logo" className="h-5" />
+            <span className="text-sm">
+              Powered by{" "}
+              <a
+                href="https://minaprotocol.com/"
+                target="_blank"
+                rel="noreferrer"
+                className=" text-sm font-normal underline underline-offset-4"
+              >
+                Mina
+              </a>
+            </span>
           </div>
         </div>
       </div>
