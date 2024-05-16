@@ -1,3 +1,4 @@
+import Footer from "@/app/components/footer";
 import SearchBar from "@/app/components/searchbar";
 import { Sidebar } from "@/app/components/sidebar";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -37,6 +38,7 @@ export default function AsyncLayout({ children }: { children: ReactNode }) {
                 <SearchBar></SearchBar>
                 {children}
               </main>
+              <Footer className="col-start-2 col-end-7" />
               <Toaster />
             </div>
           </div>
