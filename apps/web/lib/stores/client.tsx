@@ -1,4 +1,4 @@
-import { client } from "chain";
+import { client } from "drm-mina-chain/dist/src/index.js";
 import { useEffect } from "react";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";

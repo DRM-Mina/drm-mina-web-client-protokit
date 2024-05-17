@@ -77,15 +77,15 @@ importers:
       aws-sdk:
         specifier: ^2.1617.0
         version: 2.1617.0
-      chain:
-        specifier: workspace:*
-        version: link:../../packages/chain
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
       clsx:
         specifier: ^2.0.0
         version: 2.1.0
+      drm-mina-chain:
+        specifier: ^1.1.2
+        version: 1.1.2(@proto-kit/api@0.1.1-develop.651)(@proto-kit/cli@0.1.1-develop.651)(@proto-kit/common@0.1.1-develop.651)(@proto-kit/library@0.1.1-develop.651)(@proto-kit/module@0.1.1-develop.651)(@proto-kit/protocol@0.1.1-develop.651)(@proto-kit/sdk@0.1.1-develop.651)(@proto-kit/sequencer@0.1.1-develop.651)(o1js@0.13.1)(tsyringe@4.8.0)
       embla-carousel-autoplay:
         specifier: ^8.0.0
         version: 8.0.2(embla-carousel@8.0.2)
@@ -182,7 +182,7 @@ importers:
         version: 0.1.1-develop.651(@proto-kit/common@0.1.1-develop.651)(@proto-kit/module@0.1.1-develop.651)(@proto-kit/protocol@0.1.1-develop.651)(@proto-kit/sequencer@0.1.1-develop.651)(o1js@0.13.1)(tsyringe@4.8.0)
       '@proto-kit/cli':
         specifier: '*'
-        version: 0.1.1-develop.651(@proto-kit/api@0.1.1-develop.651)(@proto-kit/common@0.1.1-develop.651)(@proto-kit/library@0.1.1-develop.651)(@proto-kit/module@0.1.1-develop.651)(@proto-kit/protocol@0.1.1-develop.651)(@proto-kit/sdk@0.1.1-develop.651)(@proto-kit/sequencer@0.1.1-develop.651)(o1js@0.13.1)
+        version: 0.1.1-develop.651(@proto-kit/api@0.1.1-develop.651)(@proto-kit/common@0.1.1-develop.651)(@proto-kit/library@0.1.1-develop.651)(@proto-kit/module@0.1.1-develop.651)(@proto-kit/protocol@0.1.1-develop.651)(@proto-kit/sdk@0.1.1-develop.651)(@proto-kit/sequencer@0.1.1-develop.651)(@types/react@18.2.47)(o1js@0.13.1)
       '@proto-kit/common':
         specifier: '*'
         version: 0.1.1-develop.651(o1js@0.13.1)(tsyringe@4.8.0)
@@ -955,7 +955,7 @@ packages:
       cli-spinners: 2.9.2
       deepmerge: 4.3.1
       figures: 5.0.0
-      ink: 4.4.1(react@18.2.0)
+      ink: 4.4.1(@types/react@18.2.47)(react@18.2.0)
     dev: false
 
   /@ioredis/commands@1.2.0:
@@ -1450,7 +1450,7 @@ packages:
       - supports-color
     dev: false
 
-  /@proto-kit/cli@0.1.1-develop.651(@proto-kit/api@0.1.1-develop.651)(@proto-kit/common@0.1.1-develop.651)(@proto-kit/library@0.1.1-develop.651)(@proto-kit/module@0.1.1-develop.651)(@proto-kit/protocol@0.1.1-develop.651)(@proto-kit/sdk@0.1.1-develop.651)(@proto-kit/sequencer@0.1.1-develop.651)(o1js@0.13.1):
+  /@proto-kit/cli@0.1.1-develop.651(@proto-kit/api@0.1.1-develop.651)(@proto-kit/common@0.1.1-develop.651)(@proto-kit/library@0.1.1-develop.651)(@proto-kit/module@0.1.1-develop.651)(@proto-kit/protocol@0.1.1-develop.651)(@proto-kit/sdk@0.1.1-develop.651)(@proto-kit/sequencer@0.1.1-develop.651)(@types/react@18.2.47)(o1js@0.13.1):
     resolution: {integrity: sha512-wdPDrPVexntQoKe27ZSK/CyjTjYj+o6MqGgDOTZLpFS2NopCSywb9mqmi9iLZdleZUcuEyqcoiP5uJymDK2UDQ==}
     hasBin: true
     peerDependencies:
@@ -1473,7 +1473,7 @@ packages:
       '@proto-kit/sequencer': 0.1.1-develop.651(@proto-kit/common@0.1.1-develop.651)(@proto-kit/module@0.1.1-develop.651)(@proto-kit/protocol@0.1.1-develop.651)(o1js@0.13.1)(tsyringe@4.8.0)
       '@types/yargs': 17.0.32
       figlet: 1.7.0
-      ink: 4.4.1(react@18.2.0)
+      ink: 4.4.1(@types/react@18.2.47)(react@18.2.0)
       ink-ascii: 0.0.4(ink@4.4.1)(react@18.2.0)
       o1js: 0.13.1
       react: 18.2.0
@@ -3408,7 +3408,6 @@ packages:
     dependencies:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
-    dev: true
 
   /chalk@5.3.0:
     resolution: {integrity: sha512-dLitG79d+GV1Nb/VYcCDFivJeK1hiukt9QjRNVOsUtTy1rR1YJsmpGGTZ3qJos+uw7WmWF4wUwBd9jxjocFC2w==}
@@ -3576,6 +3575,22 @@ packages:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
     dev: true
 
+  /concurrently@8.2.2:
+    resolution: {integrity: sha512-1dP4gpXFhei8IOtlXRE/T/4H88ElHgTiUzh71YUmtjTEHMSRS2Z/fgOxHSxxusGHogsRfxNq1vyAwxSC+EVyDg==}
+    engines: {node: ^14.13.0 || >=16.0.0}
+    hasBin: true
+    dependencies:
+      chalk: 4.1.2
+      date-fns: 2.30.0
+      lodash: 4.17.21
+      rxjs: 7.8.1
+      shell-quote: 1.8.1
+      spawn-command: 0.0.2
+      supports-color: 8.1.1
+      tree-kill: 1.2.2
+      yargs: 17.7.2
+    dev: false
+
   /content-disposition@0.5.4:
     resolution: {integrity: sha512-FveZTNuGw04cxlAiWbzi6zTAL/lhehaWbTtgluJh4/E95DqMwTmha3KZN1aAWA8cFIhHzMZUvLevkw5Rqk+tSQ==}
     engines: {node: '>= 0.6'}
@@ -3705,6 +3720,24 @@ packages:
   /dataloader@2.2.2:
     resolution: {integrity: sha512-8YnDaaf7N3k/q5HnTJVuzSyLETjoZjVmHc4AeKAzOvKHEFQKcn64OKBfzHYtE9zGjctNM7V9I0MfnUVLpi7M5g==}
     dev: false
+
+  /date-fns@2.30.0:
+    resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
+    engines: {node: '>=0.11'}
+    dependencies:
+      '@babel/runtime': 7.23.8
+    dev: false
+
+  /debug@3.2.7:
+    resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
+    dependencies:
+      ms: 2.1.3
+    dev: true
 
   /debug@3.2.7(supports-color@5.5.0):
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
@@ -3872,6 +3905,34 @@ packages:
     resolution: {integrity: sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==}
     engines: {node: '>=12'}
     dev: true
+
+  /drm-mina-chain@1.1.2(@proto-kit/api@0.1.1-develop.651)(@proto-kit/cli@0.1.1-develop.651)(@proto-kit/common@0.1.1-develop.651)(@proto-kit/library@0.1.1-develop.651)(@proto-kit/module@0.1.1-develop.651)(@proto-kit/protocol@0.1.1-develop.651)(@proto-kit/sdk@0.1.1-develop.651)(@proto-kit/sequencer@0.1.1-develop.651)(o1js@0.13.1)(tsyringe@4.8.0):
+    resolution: {integrity: sha512-a+RTJHdGSzOA9pvryBcIzZ2yUUJFtU9wKGKHl16RZtO5Vk/DV+0Dena5B7y5Hph3vcvYTDuriYVsU9ovmIAAng==}
+    peerDependencies:
+      '@proto-kit/api': '*'
+      '@proto-kit/cli': '*'
+      '@proto-kit/common': '*'
+      '@proto-kit/library': '*'
+      '@proto-kit/module': '*'
+      '@proto-kit/protocol': '*'
+      '@proto-kit/sdk': '*'
+      '@proto-kit/sequencer': '*'
+      o1js: 0.13.1
+      tsyringe: ^4.7.0
+    dependencies:
+      '@proto-kit/api': 0.1.1-develop.651(@proto-kit/common@0.1.1-develop.651)(@proto-kit/module@0.1.1-develop.651)(@proto-kit/protocol@0.1.1-develop.651)(@proto-kit/sequencer@0.1.1-develop.651)(o1js@0.13.1)(tsyringe@4.8.0)
+      '@proto-kit/cli': 0.1.1-develop.651(@proto-kit/api@0.1.1-develop.651)(@proto-kit/common@0.1.1-develop.651)(@proto-kit/library@0.1.1-develop.651)(@proto-kit/module@0.1.1-develop.651)(@proto-kit/protocol@0.1.1-develop.651)(@proto-kit/sdk@0.1.1-develop.651)(@proto-kit/sequencer@0.1.1-develop.651)(@types/react@18.2.47)(o1js@0.13.1)
+      '@proto-kit/common': 0.1.1-develop.651(o1js@0.13.1)(tsyringe@4.8.0)
+      '@proto-kit/library': 0.1.1-develop.651(@proto-kit/common@0.1.1-develop.651)(@proto-kit/module@0.1.1-develop.651)(@proto-kit/protocol@0.1.1-develop.651)(@proto-kit/sequencer@0.1.1-develop.651)(o1js@0.13.1)(tsyringe@4.8.0)
+      '@proto-kit/module': 0.1.1-develop.651(@proto-kit/common@0.1.1-develop.651)(@proto-kit/protocol@0.1.1-develop.651)(o1js@0.13.1)(tsyringe@4.8.0)
+      '@proto-kit/protocol': 0.1.1-develop.651(@proto-kit/common@0.1.1-develop.651)(o1js@0.13.1)(ts-pattern@4.3.0)(tsyringe@4.8.0)
+      '@proto-kit/sdk': 0.1.1-develop.651(@proto-kit/api@0.1.1-develop.651)(@proto-kit/common@0.1.1-develop.651)(@proto-kit/library@0.1.1-develop.651)(@proto-kit/module@0.1.1-develop.651)(@proto-kit/protocol@0.1.1-develop.651)(@proto-kit/sequencer@0.1.1-develop.651)(graphql@16.6.0)(o1js@0.13.1)(reflect-metadata@0.2.1)(tsyringe@4.8.0)
+      '@proto-kit/sequencer': 0.1.1-develop.651(@proto-kit/common@0.1.1-develop.651)(@proto-kit/module@0.1.1-develop.651)(@proto-kit/protocol@0.1.1-develop.651)(o1js@0.13.1)(tsyringe@4.8.0)
+      concurrently: 8.2.2
+      o1js: 0.13.1
+      reflect-metadata: 0.2.1
+      tsyringe: 4.8.0
+    dev: false
 
   /dset@3.1.3:
     resolution: {integrity: sha512-20TuZZHCEZ2O71q9/+8BwKwZ0QtD9D8ObhrihJPr+vLLYlSuAU3/zL4cSlgbfeoGHTjCSJBa7NGcrF9/Bx/WJQ==}
@@ -4131,7 +4192,7 @@ packages:
   /eslint-import-resolver-node@0.3.9:
     resolution: {integrity: sha512-WFj2isz22JahUv+B788TlO3N6zL3nNJGU8CcZbPZvVEkBPaJdCV4vy5wyghty5ROFbCRnm132v8BScu5/1BQ8g==}
     dependencies:
-      debug: 3.2.7(supports-color@5.5.0)
+      debug: 3.2.7
       is-core-module: 2.13.1
       resolve: 1.22.8
     transitivePeerDependencies:
@@ -4206,7 +4267,7 @@ packages:
         optional: true
     dependencies:
       '@typescript-eslint/parser': 6.18.1(eslint@8.56.0)(typescript@5.3.3)
-      debug: 3.2.7(supports-color@5.5.0)
+      debug: 3.2.7
       eslint: 8.56.0
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@6.18.1)(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.56.0)
@@ -4298,7 +4359,7 @@ packages:
       array.prototype.findlastindex: 1.2.3
       array.prototype.flat: 1.3.2
       array.prototype.flatmap: 1.3.2
-      debug: 3.2.7(supports-color@5.5.0)
+      debug: 3.2.7
       doctrine: 2.1.0
       eslint: 8.56.0
       eslint-import-resolver-node: 0.3.9
@@ -5045,7 +5106,6 @@ packages:
   /has-flag@4.0.0:
     resolution: {integrity: sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==}
     engines: {node: '>=8'}
-    dev: true
 
   /has-property-descriptors@1.0.1:
     resolution: {integrity: sha512-VsX8eaIewvas0xnvinAe9bw4WfIeODpGYikiWYLH+dma0Jw6KHYqWiWfhQlgOVK8D6PvjubK5Uc4P0iIhIcNVg==}
@@ -5200,11 +5260,11 @@ packages:
       react: '>=16.11.0'
     dependencies:
       figlet: 1.7.0
-      ink: 4.4.1(react@18.2.0)
+      ink: 4.4.1(@types/react@18.2.47)(react@18.2.0)
       react: 18.2.0
     dev: false
 
-  /ink@4.4.1(react@18.2.0):
+  /ink@4.4.1(@types/react@18.2.47)(react@18.2.0):
     resolution: {integrity: sha512-rXckvqPBB0Krifk5rn/5LvQGmyXwCUpBfmTwbkQNBY9JY8RSl3b8OftBNEYxg4+SWUhEKcPifgope28uL9inlA==}
     engines: {node: '>=14.16'}
     peerDependencies:
@@ -5218,6 +5278,7 @@ packages:
         optional: true
     dependencies:
       '@alcalzone/ansi-tokenize': 0.1.3
+      '@types/react': 18.2.47
       ansi-escapes: 6.2.1
       auto-bind: 5.0.1
       chalk: 5.3.0
@@ -7382,6 +7443,12 @@ packages:
     dependencies:
       queue-microtask: 1.2.3
 
+  /rxjs@7.8.1:
+    resolution: {integrity: sha512-AA3TVj+0A2iuIoQkWEK/tqFjBq2j+6PO6Y0zJcvzLAFhEFIO3HL0vls9hWLncZbAAbK0mar7oZ4V079I/qPMxg==}
+    dependencies:
+      tslib: 2.6.2
+    dev: false
+
   /safe-array-concat@1.0.1:
     resolution: {integrity: sha512-6XbUAseYE2KtOuGueyeobCySj9L4+66Tn6KQMOPQJrAJEowYKW/YR/MGJZl7FdydUdaFu4LYyDZjxf4/Nmo23Q==}
     engines: {node: '>=0.4'}
@@ -7480,6 +7547,10 @@ packages:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
 
+  /shell-quote@1.8.1:
+    resolution: {integrity: sha512-6j1W9l1iAs/4xYBI1SYOVZyFcCis9b4KCLQ8fgAGG07QvzaRLVVRQvAy85yNmmZSjYjg4MWh4gNvlPujU/5LpA==}
+    dev: false
+
   /side-channel@1.0.4:
     resolution: {integrity: sha512-q5XPytqFEIKHkGdiMIrY10mvLRvnQh42/+GoBlFW3b2LXLE2xxJpZFdm94we0BaoV3RwJyGqg5wS7epxTv0Zvw==}
     dependencies:
@@ -7564,6 +7635,10 @@ packages:
     resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
     engines: {node: '>=0.10.0'}
     dev: true
+
+  /spawn-command@0.0.2:
+    resolution: {integrity: sha512-zC8zGoGkmc8J9ndvml8Xksr1Amk9qBujgbF0JAIWO7kXr43w0h/0GJNM/Vustixu+YE8N/MTrQ7N31FvHUACxQ==}
+    dev: false
 
   /spdx-correct@3.2.0:
     resolution: {integrity: sha512-kN9dJbvnySHULIluDHy32WHRUu3Og7B9sbY7tsFLctQkIqnMh3hErYgdMjTYuqmcXX+lK5T1lnUt3G7zNswmZA==}
@@ -7768,14 +7843,12 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       has-flag: 4.0.0
-    dev: true
 
   /supports-color@8.1.1:
     resolution: {integrity: sha512-MpUEN2OodtUzxvKQl72cUF7RQ5EiHsGvSsVG0ia9c5RbWGL2CI4C7EpPS8UTBIplnlzZiNuV56w+FuNxy3ty2Q==}
     engines: {node: '>=10'}
     dependencies:
       has-flag: 4.0.0
-    dev: true
 
   /supports-preserve-symlinks-flag@1.0.0:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
@@ -7897,6 +7970,11 @@ packages:
 
   /tr46@0.0.3:
     resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
+    dev: false
+
+  /tree-kill@1.2.2:
+    resolution: {integrity: sha512-L0Orpi8qGpRG//Nd+H90vFB+3iHnue1zSSGmNOOCh1GLJ7rUKVwV2HvijphGQS2UmhUZewS9VgvxYIdgr+fG1A==}
+    hasBin: true
     dev: false
 
   /truncate-middle@1.0.6:
