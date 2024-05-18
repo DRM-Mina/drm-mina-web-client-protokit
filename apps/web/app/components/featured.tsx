@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo } from "react";
+import React from "react";
 import {
   Carousel,
   CarouselContent,
@@ -15,7 +15,6 @@ import {
   CardShadow,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useGamesStore } from "@/lib/stores/gameStore";
 import GameBookmark from "./bookmark";
@@ -54,7 +53,9 @@ export default function Featured() {
                 >
                   <CardContent className="relative flex items-center justify-center p-6 md:aspect-square lg:aspect-video">
                     <img
-                      src={ENDPOINT + game.cover}
+                      src={
+                        ENDPOINT + game.cover.replace("images/", "images_10/")
+                      }
                       crossOrigin="anonymous"
                       alt={game.name}
                       className="h-full w-full object-cover"
@@ -77,7 +78,7 @@ export default function Featured() {
                           {game?.price - game?.discount}
                         </span>
                         <img
-                          src={"/mina.png"}
+                          src={"/mina.webp"}
                           alt="mina"
                           className=" inline-block h-5 w-5"
                         />

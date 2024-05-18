@@ -53,7 +53,9 @@ export default function Discounts() {
                 >
                   <CardContent className="lg:aspect-3/4 relative flex items-center justify-center p-6 md:aspect-square">
                     <img
-                      src={ENDPOINT + game.cover}
+                      src={
+                        ENDPOINT + game.cover.replace("images/", "images_10/")
+                      }
                       crossOrigin="anonymous"
                       alt={game.name}
                       className="h-full w-full object-cover"
@@ -72,7 +74,7 @@ export default function Discounts() {
                           {game?.price - game?.discount}
                         </span>
                         <img
-                          src={"/mina.png"}
+                          src={"/mina.webp"}
                           alt="mina"
                           className=" inline-block h-4 w-4"
                         />

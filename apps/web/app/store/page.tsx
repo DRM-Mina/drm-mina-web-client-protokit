@@ -2,8 +2,11 @@
 import React from "react";
 import Discounts from "../components/discounts";
 import dynamic from "next/dynamic";
+import FeaturedSkeleton from "../components/featuredSkeleton";
 
-const Featured = dynamic(() => import("@/app/components/featured"));
+const Featured = dynamic(() => import("@/app/components/featured"), {
+  loading: () => <FeaturedSkeleton />,
+});
 
 export default function Store() {
   return (

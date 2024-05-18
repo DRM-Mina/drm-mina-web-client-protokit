@@ -138,7 +138,9 @@ export default function GameDetail() {
               {Array.from({ length: 5 }).map((_, i) => (
                 <CarouselItem key={i}>
                   <img
-                    src={ENDPOINT! + game?.cover}
+                    src={
+                      ENDPOINT! + game?.cover.replace("images/", "images_40/")
+                    }
                     crossOrigin="anonymous"
                     alt="Game"
                     className="aspect-video h-full w-full object-cover"
@@ -185,7 +187,7 @@ export default function GameDetail() {
                     {game?.price! - game?.discount!}
                   </span>
                   <img
-                    src={"/mina.png"}
+                    src={"/mina.webp"}
                     alt="mina"
                     className=" inline-block h-4 w-4"
                   />

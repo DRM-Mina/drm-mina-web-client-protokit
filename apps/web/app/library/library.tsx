@@ -55,7 +55,7 @@ export default function DynamicLibrary() {
             >
               <CardContent className=" col-span-3 aspect-video items-center justify-center  p-4">
                 <img
-                  src={ENDPOINT + game.cover}
+                  src={ENDPOINT + game.cover.replace("images/", "images_10/")}
                   crossOrigin="anonymous"
                   alt={game.name}
                   className="flex h-full w-full rounded-lg object-cover"
