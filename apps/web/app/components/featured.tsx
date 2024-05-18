@@ -54,7 +54,7 @@ export default function Featured() {
                   <CardContent className="relative flex items-center justify-center p-6 md:aspect-square lg:aspect-video">
                     <img
                       src={
-                        ENDPOINT + game.cover.replace("images/", "images_10/")
+                        ENDPOINT + game.cover.replace("images/", "images_20/")
                       }
                       crossOrigin="anonymous"
                       alt={game.name}
