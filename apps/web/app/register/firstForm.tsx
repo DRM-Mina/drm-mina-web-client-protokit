@@ -135,7 +135,7 @@ export default function FirstForm() {
 
       <div>
         <p className="text-md py-4">
-          50 Mina{" "}
+          0 Mina{" "}
           {/* <img
             src={"/mina.webp"}
             alt="mina"
