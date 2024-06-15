@@ -1,4 +1,3 @@
-import { CardFooter, CardTitle } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
