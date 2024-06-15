@@ -1,8 +1,11 @@
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 import React from "react";
 interface FooterProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export default function Footer({ className }: FooterProps) {
+  const router = useRouter();
+
   return (
     <footer
       className={cn(
@@ -35,6 +38,15 @@ export default function Footer({ className }: FooterProps) {
           >
             Twitter
           </a>
+        </div>
+
+        <div>
+          <div
+            className=" cursor-pointer text-sm font-normal underline underline-offset-4"
+            onClick={() => router.push("/register")}
+          >
+            Do You Want to Add Your Game?
+          </div>
         </div>
 
         <div></div>
