@@ -13,8 +13,10 @@ import {
 } from "@/components/ui/select";
 import { useUserStore } from "@/lib/stores/userWallet";
 import React, { useState } from "react";
-import FirstForm from "./firstForm";
 import SecondForm from "./secondForm";
+import dynamic from "next/dynamic";
+
+const FirstForm = dynamic(() => import("./firstForm"));
 
 export default function Register() {
   const userStore = useUserStore();

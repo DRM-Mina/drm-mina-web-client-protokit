@@ -10,7 +10,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
-import React, { useState } from "react";
+import { useRegisterGameOnChain } from "@/lib/stores/gameRegister";
+import React, { useCallback, useState } from "react";
 
 export default function FirstForm() {
   const [form, setForm] = useState({
@@ -20,6 +21,13 @@ export default function FirstForm() {
     numberOfDevices: 2,
   });
 
+  const registerGame = useRegisterGameOnChain(
+    form.price,
+    form.discount,
+    form.timeoutInterval,
+    form.numberOfDevices,
+  );
+
   const { toast } = useToast();
 
   const handleToast = (msg: string) => {
@@ -28,7 +36,7 @@ export default function FirstForm() {
     });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (form.price < 0) {
       handleToast("Price cannot be negative");
       return;
@@ -49,8 +57,9 @@ export default function FirstForm() {
       return;
     }
 
-    handleToast("Game registered successfully");
+    registerGame();
   };
+
   return (
     <>
       <div>
