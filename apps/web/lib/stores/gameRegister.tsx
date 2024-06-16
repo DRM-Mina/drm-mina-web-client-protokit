@@ -62,37 +62,46 @@ export const useRegisterStore = create<
   })),
 );
 
-// export const useRegisterGameOnChain = (
-//   price: number,
-//   discount: number,
-//   timeoutInterval: number,
-//   numberOfDevices: number,
-// ) => {
-//   const gameRegisterStore = useRegisterStore();
-//   const client = useClientStore();
-//   const userStore = useUserStore();
-//   const transactions = useTransactionStore();
-//   const { toast } = useToast();
+export const useRegisterGameOnChain = (
+  price: number,
+  discount: number,
+  timeoutInterval: number,
+  numberOfDevices: number,
+) => {
+  const gameRegisterStore = useRegisterStore();
+  const client = useClientStore();
+  const userStore = useUserStore();
+  const transactions = useTransactionStore();
+  const { toast } = useToast();
 
-//   return useCallback(async () => {
-//     if (userStore.isConnected === false) {
-//       toast({
-//         title: "Wallet not connected",
-//         description: "Please connect your wallet",
-//       });
-//       return;
-//     }
-//     if (!client.client || !userStore.userPublicKey) return;
+  return useCallback(async () => {
+    if (userStore.isConnected === false) {
+      toast({
+        title: "Wallet not connected",
+        description: "Please connect your wallet",
+      });
+      return;
+    }
+    if (!client.client || !userStore.userPublicKey) return;
 
-//     const pendingTransaction = await gameRegisterStore.registerGameOnChain(
-//       client.client,
-//       userStore.userPublicKey,
-//       price,
-//       discount,
-//       timeoutInterval,
-//       numberOfDevices,
-//     );
+    console.log(price, discount, timeoutInterval, numberOfDevices);
 
-//     transactions.addPendingTransaction(pendingTransaction);
-//   }, [client.client, userStore.userPublicKey]);
-// };
+    const pendingTransaction = await gameRegisterStore.registerGameOnChain(
+      client.client,
+      userStore.userPublicKey,
+      price,
+      discount,
+      timeoutInterval,
+      numberOfDevices,
+    );
+
+    transactions.addPendingTransaction(pendingTransaction);
+  }, [
+    client.client,
+    userStore.userPublicKey,
+    price,
+    discount,
+    timeoutInterval,
+    numberOfDevices,
+  ]);
+};
