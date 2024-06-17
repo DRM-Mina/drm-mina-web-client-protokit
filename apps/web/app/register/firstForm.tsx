@@ -11,14 +11,14 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { useRegisterGameOnChain } from "@/lib/stores/gameRegister";
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 
 export default function FirstForm() {
   const [form, setForm] = useState({
     price: 0,
     discount: 0,
     timeoutInterval: 120,
-    numberOfDevices: 2,
+    numberOfDevices: 1,
   });
 
   const registerGame = useRegisterGameOnChain(
@@ -52,7 +52,7 @@ export default function FirstForm() {
       return;
     }
 
-    if (form.numberOfDevices < 2) {
+    if (form.numberOfDevices < 1) {
       handleToast("Number of devices cannot be less than 2");
       return;
     }
@@ -124,7 +124,7 @@ export default function FirstForm() {
       <div>
         <Label>Number of Devices Allowed</Label>
         <Select
-          defaultValue="2"
+          defaultValue="1"
           onValueChange={(value) => {
             setForm((prev) => ({ ...prev, numberOfDevices: parseInt(value) }));
           }}
@@ -134,6 +134,7 @@ export default function FirstForm() {
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
+              <SelectItem value="1">1</SelectItem>
               <SelectItem value="2">2</SelectItem>
               <SelectItem value="3">3</SelectItem>
               <SelectItem value="4">4</SelectItem>
