@@ -13,10 +13,11 @@ import {
 } from "@/components/ui/select";
 import { useUserStore } from "@/lib/stores/userWallet";
 import React, { useState } from "react";
-import SecondForm from "./secondForm";
 import dynamic from "next/dynamic";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const FirstForm = dynamic(() => import("./firstForm"));
+const SecondForm = dynamic(() => import("./secondForm"));
 
 export default function Register() {
   const userStore = useUserStore();
@@ -47,22 +48,21 @@ export default function Register() {
               </p>
             </div>
 
-            <Select
+            <RadioGroup
               defaultValue="1"
-              onValueChange={(value) => {
+              onValueChange={(value: string) => {
                 setForm(value);
               }}
             >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select Form" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="1">First Form</SelectItem>
-                  <SelectItem value="2">Second Form</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="1" id="r1" />
+                <Label htmlFor="r1">First Form</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="2" id="r2" />
+                <Label htmlFor="r2">Second Form</Label>
+              </div>
+            </RadioGroup>
 
             {form === "1" ? <FirstForm /> : <SecondForm />}
           </div>
