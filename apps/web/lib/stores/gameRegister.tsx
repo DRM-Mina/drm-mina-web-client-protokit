@@ -24,6 +24,9 @@ export interface GameRegisterState {
   registeredGameList: registeredGame[];
   setRegisteredGameList: (games: registeredGame[]) => void;
 
+  trigger: boolean;
+  setTrigger: (trigger: boolean) => void;
+
   registerGameOnChain: (
     client: Client,
     address: string,
@@ -81,6 +84,9 @@ export const useRegisterStore = create<
     registeredGameList: [],
     setRegisteredGameList: (gameList) =>
       set((state) => void (state.registeredGameList = gameList)),
+
+    trigger: false,
+    setTrigger: (trigger) => set((state) => void (state.trigger = trigger)),
 
     async registerGameOnChain(
       client: Client,
