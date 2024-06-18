@@ -14,6 +14,7 @@ import {
 } from "@/lib/stores/gameRegister";
 import React, { useState } from "react";
 import SelectedGame from "./selectedGame";
+import { Separator } from "@/components/ui/separator";
 
 export default function SecondForm() {
   const [selectedGame, setSelectedGame] = useState<number | null>(null);
@@ -50,7 +51,7 @@ export default function SecondForm() {
                     console.log(selectedGame);
                   }}
                 >
-                  Select
+                  {selectedGame === game.gameId ? "Selected" : "Select"}
                 </Button>
               </TableCell>
             </TableRow>
@@ -58,7 +59,12 @@ export default function SecondForm() {
         </TableBody>
       </Table>
 
-      {selectedGame !== null && <SelectedGame gameId={selectedGame} />}
+      {selectedGame !== null && (
+        <>
+          <Separator className=" mb-6" />
+          <SelectedGame gameId={selectedGame} />
+        </>
+      )}
     </>
   );
 }
