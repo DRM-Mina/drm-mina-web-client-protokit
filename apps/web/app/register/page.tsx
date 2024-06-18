@@ -33,13 +33,13 @@ export default function Register() {
               <h3 className="text-md py-4">How to Register Your Game?</h3>
 
               <p className="text-sm">
-                1. Fill the first form with your on chain game information and
-                make payment.
+                1. Fill the onchain registiration form with your on chain game
+                information and make payment.
               </p>
 
               <p className="text-sm">
-                2. After the payment is successful, fill the second form with
-                your off chain game information.
+                2. After the payment is successful, you can configure your
+                offchain game informations with your wallet.
               </p>
 
               <p className="text-sm">
@@ -56,11 +56,11 @@ export default function Register() {
             >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="1" id="r1" />
-                <Label htmlFor="r1">First Form</Label>
+                <Label htmlFor="r1">OnChain Register Form</Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="2" id="r2" />
-                <Label htmlFor="r2">Second Form</Label>
+                <Label htmlFor="r2">OffChain Register Form</Label>
               </div>
             </RadioGroup>
 
