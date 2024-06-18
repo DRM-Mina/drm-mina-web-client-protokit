@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
@@ -11,6 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import {
   useChangeDiscountOnChain,
   useChangeNumberOfDevicesOnChain,
@@ -20,6 +23,41 @@ import {
 } from "@/lib/stores/gameRegister";
 import { useGamesStore } from "@/lib/stores/gameStore";
 import React, { useEffect, useState } from "react";
+
+const tagList = [
+  "Action",
+  "Adventure",
+  "RPG",
+  "Racing",
+  "Sports",
+  "Simulation",
+  "Strategy",
+  "Puzzle",
+  "Fighting",
+  "Shooter",
+  "Stealth",
+  "Survival",
+  "Platformer",
+  "Sandbox",
+  "Horror",
+  "MMO",
+  "Metroidvania",
+  "Rhythm",
+  "Idle",
+  "Visual Novel",
+  "Tower Defense",
+  "Trivia",
+  "Card",
+  "MOBA",
+  "Battle Royale",
+  "Board Game",
+  "Educational",
+  "Party",
+  "Artillery",
+  "Pinball",
+  "Music",
+  "Dating Sim",
+];
 
 export default function SelectedGame({ gameId }: { gameId: number }) {
   const registerStore = useRegisterStore();
@@ -277,6 +315,69 @@ export default function SelectedGame({ gameId }: { gameId: number }) {
           <div className="col-span-1"></div>
           <Button className="col-span-1 self-end">Change</Button>
         </div>
+      </div>
+
+      <div>
+        <div className=" grid w-full max-w-sm grid-cols-4 p-4 ">
+          <div className=" col-span-4 items-center gap-1.5">
+            <Label htmlFor="tags">Available Tags</Label>
+            <ScrollArea id="tags" className=" h-20 w-full rounded-sm border">
+              <div className="flex flex-col gap-3 p-2">
+                {tagList.map((tag) => (
+                  <div className=" flex gap-2" key={tag}>
+                    <Checkbox
+                      key={tag}
+                      checked={offChainForm.tags.includes(tag)}
+                      onChange={(checked) => {
+                        if (checked) {
+                          console.log("checked");
+                          setOffChainForm((prev) => ({
+                            ...prev,
+                            tags: [...prev.tags, tag],
+                          }));
+                        } else {
+                          console.log("unchecked");
+                          setOffChainForm((prev) => ({
+                            ...prev,
+                            tags: prev.tags.filter((t) => t !== tag),
+                          }));
+                        }
+                      }}
+                    />
+                    <Label htmlFor={tag}>{tag}</Label>
+                  </div>
+                ))}
+              </div>
+              <ScrollBar />
+            </ScrollArea>
+          </div>
+          <Button className="m-2">Change</Button>
+        </div>
+      </div>
+
+      <div>
+        <Label>Number of Devices Allowed</Label>
+        <Select
+          defaultValue="1"
+          onValueChange={(value) => {
+            setOnChainForm((prev) => ({
+              ...prev,
+              numberOfDevices: parseInt(value),
+            }));
+          }}
+        >
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Number of Devices" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="1">1</SelectItem>
+              <SelectItem value="2">2</SelectItem>
+              <SelectItem value="3">3</SelectItem>
+              <SelectItem value="4">4</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
       </div>
     </div>
   );
