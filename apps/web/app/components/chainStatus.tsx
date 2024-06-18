@@ -4,7 +4,6 @@ import { useChainStore } from "@/lib/stores/chain";
 import { useClientStore } from "@/lib/stores/client";
 import { useRegisterStore } from "@/lib/stores/gameRegister";
 import { useGamesStore } from "@/lib/stores/gameStore";
-// import { UInt64 } from "@proto-kit/library";
 import React, { useEffect } from "react";
 
 const query = `
@@ -47,15 +46,13 @@ export default function ChainStatus() {
     if (!client.client) return;
     (async () => {
       const games: Game[] = await fetchGameData();
-      console.log(games);
+      let gameList: Game[] = [];
       const totalGames =
         await client.client!.query.runtime.GameToken.totalGameNumber.get();
-      // const totalGames = games.length;
       const gameIds = Array.from(
         { length: Number(totalGames?.toString()) },
         (_, i) => i + 1,
       );
-      console.log(gameIds);
       for (const gameId of gameIds) {
         const url =
           process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
@@ -76,12 +73,6 @@ export default function ChainStatus() {
           data.runtime.GameToken.discount?.value &&
           data.runtime.GameToken.gamePrice?.value
         ) {
-          // games[gameId - 1].price = Number(
-          //   data.runtime.GameToken.gamePrice?.value.toString(),
-          // );
-          // games[gameId - 1].discount = Number(
-          //   data.runtime.GameToken.discount?.value.toString(),
-          // );
           const game = games.find((game: Game) => game.gameId === gameId);
           if (game) {
             game.price = Number(
@@ -93,11 +84,13 @@ export default function ChainStatus() {
             if (!game.cover) {
               game.cover = "images/default.webp";
             }
+            gameList.push(game);
           }
         }
       }
-      gameStore.setGames(games);
-      const discounts = games.filter((game: Game) => game.discount > 0);
+      console.log(gameList);
+      gameStore.setGames(gameList);
+      const discounts = gameList.filter((game: Game) => game.discount > 0);
       gameStore.setDiscountGames(discounts);
     })();
   }, [registerStore.trigger]);

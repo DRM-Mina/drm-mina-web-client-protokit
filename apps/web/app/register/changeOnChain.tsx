@@ -1,8 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
@@ -11,9 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import {
   useChangeDiscountOnChain,
   useChangeNumberOfDevicesOnChain,
@@ -21,8 +16,6 @@ import {
   useChangeTimeoutIntervalOnChain,
   useRegisterStore,
 } from "@/lib/stores/gameRegister";
-import { useGamesStore } from "@/lib/stores/gameStore";
-import { tagList } from "@/lib/utils";
 import React, { useEffect, useState } from "react";
 
 export default function ChangeOnChain({ gameId }: { gameId: number }) {
@@ -163,7 +156,7 @@ export default function ChangeOnChain({ gameId }: { gameId: number }) {
           <div className=" col-span-2 items-center gap-1.5">
             <Label>Number of Devices Allowed</Label>
             <Select
-              defaultValue="1"
+              defaultValue={onChainForm.numberOfDevices.toString()}
               onValueChange={(value) => {
                 setOnChainForm((prev) => ({
                   ...prev,
