@@ -45,21 +45,16 @@ export default function ChainStatus() {
     if (!client.client) return;
     (async () => {
       const games: Game[] = await fetchGameData();
+      console.log(games);
       const totalGames =
         await client.client!.query.runtime.GameToken.totalGameNumber.get();
+      // const totalGames = games.length;
       const gameIds = Array.from(
         { length: Number(totalGames?.toString()) },
         (_, i) => i + 1,
       );
+      console.log(gameIds);
       for (const gameId of gameIds) {
-        // const price =
-        //   await client.client!.query.runtime.GameToken.gamePrice.get(
-        //     UInt64.from(gameId),
-        //   );
-        // const discount =
-        //   await client.client!.query.runtime.GameToken.discount.get(
-        //     UInt64.from(gameId),
-        //   );
         const url =
           process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
           "http://localhost:8080/graphql";
@@ -74,17 +69,27 @@ export default function ChainStatus() {
         });
 
         const { data } = (await response.json()) as GamePrices;
+        console.log(data);
 
         if (
           data.runtime.GameToken.discount?.value &&
           data.runtime.GameToken.gamePrice?.value
         ) {
-          games[gameId - 1].price = Number(
-            data.runtime.GameToken.gamePrice?.value.toString(),
-          );
-          games[gameId - 1].discount = Number(
-            data.runtime.GameToken.discount?.value.toString(),
-          );
+          // games[gameId - 1].price = Number(
+          //   data.runtime.GameToken.gamePrice?.value.toString(),
+          // );
+          // games[gameId - 1].discount = Number(
+          //   data.runtime.GameToken.discount?.value.toString(),
+          // );
+          const game = games.find((game: Game) => game.gameId === gameId);
+          if (game) {
+            game.price = Number(
+              data.runtime.GameToken.gamePrice?.value.toString(),
+            );
+            game.discount = Number(
+              data.runtime.GameToken.discount?.value.toString(),
+            );
+          }
         }
       }
       gameStore.setGames(games);
