@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { fetchGameData } from "@/lib/api";
 import { useChainStore } from "@/lib/stores/chain";
 import { useClientStore } from "@/lib/stores/client";
+import { useRegisterStore } from "@/lib/stores/gameRegister";
 import { useGamesStore } from "@/lib/stores/gameStore";
 // import { UInt64 } from "@proto-kit/library";
 import React, { useEffect } from "react";
@@ -40,6 +41,7 @@ export default function ChainStatus() {
   const client = useClientStore();
   const chain = useChainStore();
   const gameStore = useGamesStore();
+  const registerStore = useRegisterStore();
 
   useEffect(() => {
     if (!client.client) return;
@@ -69,7 +71,6 @@ export default function ChainStatus() {
         });
 
         const { data } = (await response.json()) as GamePrices;
-        console.log(data);
 
         if (
           data.runtime.GameToken.discount?.value &&
@@ -89,6 +90,9 @@ export default function ChainStatus() {
             game.discount = Number(
               data.runtime.GameToken.discount?.value.toString(),
             );
+            if (!game.cover) {
+              game.cover = "images/default.webp";
+            }
           }
         }
       }
@@ -96,7 +100,7 @@ export default function ChainStatus() {
       const discounts = games.filter((game: Game) => game.discount > 0);
       gameStore.setDiscountGames(discounts);
     })();
-  }, []);
+  }, [registerStore.trigger]);
 
   return (
     <Badge className=" items-center rounded-lg text-center" variant="outline">

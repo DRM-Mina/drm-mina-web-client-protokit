@@ -1,4 +1,21 @@
 declare global {
+  interface SignedData {
+    publicKey: string;
+    data: string;
+    signature: {
+      field: string;
+      scalar: string;
+    };
+  }
+
+  interface ProviderError extends Error {
+    message: string;
+    code: number;
+    data?: unknown;
+  }
+  type SignMessageArgs = {
+    message: string;
+  };
   interface Game {
     gameId: number;
     name: string;
@@ -54,7 +71,7 @@ declare global {
       /** Verifies the given signed message. Returns `true`/`false` based on the verification. */
       verifyMessage(params: {
         publicKey: string;
-        payload: string;
+        data: string;
         signature: {
           field: string;
           scalar: string;

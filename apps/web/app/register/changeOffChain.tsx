@@ -4,12 +4,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/components/ui/use-toast";
+import { postGameData } from "@/lib/api";
 import { useRegisterStore } from "@/lib/stores/gameRegister";
 import { useGamesStore } from "@/lib/stores/gameStore";
 import { tagList } from "@/lib/utils";
 import React, { useEffect, useState } from "react";
 
 export default function ChangeOffChain({ gameId }: { gameId: number }) {
+  const { toast } = useToast();
   const registerStore = useRegisterStore();
   const gameStore = useGamesStore();
 
@@ -43,8 +46,44 @@ export default function ChangeOffChain({ gameId }: { gameId: number }) {
     });
   }, [gameId, registerStore.registeredGameList]);
 
-  const handleOffChainDataSubmit = () => {
-    console.table(offChainForm);
+  const handleOffChainDataSubmit = async () => {
+    try {
+      const date = Date.now();
+      const offChainData = {
+        ...offChainForm,
+        gameId: gameId,
+        date: date.toString(),
+      };
+      const jsonData = JSON.stringify(offChainData);
+
+      const signResult = await window.mina?.signMessage({
+        message: jsonData,
+      });
+
+      if (signResult) {
+        const verifyResult = await window.mina?.verifyMessage(signResult);
+        if (verifyResult) {
+          const result = await postGameData(signResult);
+          if (result) {
+            toast({
+              description: "Your game data has been updated",
+            });
+            registerStore.setTrigger(!registerStore.trigger);
+          } else {
+            throw new Error("Server Error");
+          }
+        } else {
+          throw new Error("Verification failed");
+        }
+      } else {
+        throw new Error("Sign failed");
+      }
+    } catch (e: any) {
+      toast({
+        title: "Game Data Update Failed",
+        description: e.message,
+      });
+    }
   };
   return (
     <div className=" col-span-1">
