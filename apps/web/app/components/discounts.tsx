@@ -54,7 +54,12 @@ export default function Discounts() {
                   <CardContent className="lg:aspect-3/4 relative flex items-center justify-center p-6 md:aspect-square">
                     <img
                       src={
-                        ENDPOINT + game.cover.replace("images/", "images_10/")
+                        ENDPOINT +
+                        "images/" +
+                        game.imageFolder +
+                        "/10/" +
+                        game.imageFolder +
+                        ".webp"
                       }
                       crossOrigin="anonymous"
                       alt={game.name}

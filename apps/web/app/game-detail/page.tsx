@@ -49,6 +49,7 @@ export default function GameDetail() {
   const router = useRouter();
 
   const game = gameStore.games.find((game) => game.name === gameName);
+  const imageCount = game?.imageCount || 1;
 
   const handleGameDownload = async (gameId: number) => {
     if (gameId !== 1) {
@@ -135,11 +136,20 @@ export default function GameDetail() {
             className="w-full justify-center p-4"
           >
             <CarouselContent>
-              {Array.from({ length: 5 }).map((_, i) => (
+              {Array.from({ length: imageCount }).map((_, i) => (
                 <CarouselItem key={i}>
                   <img
                     src={
-                      ENDPOINT! + game?.cover.replace("images/", "images_40/")
+                      imageCount > 1
+                        ? ENDPOINT! +
+                          "images/" +
+                          game?.imageFolder +
+                          "/40/" +
+                          game?.imageFolder +
+                          "_ingame_" +
+                          (i + 1) +
+                          ".webp"
+                        : ENDPOINT! + "images/default/40/default.webp"
                     }
                     crossOrigin="anonymous"
                     alt="Game"
@@ -152,10 +162,21 @@ export default function GameDetail() {
         </div>
         <div className=" col-span-2 h-full px-4">
           <div className=" mt-8 flex h-full flex-col items-center justify-between p-8">
-            <h1 className=" p-4 text-3xl font-bold">{game?.name}</h1>
+            <div className="w-full ">
+              <h1 className=" self-center p-4 text-3xl font-bold">
+                {game?.name}
+              </h1>
+              <Separator />
+              <h3 className=" self text-md p-3 font-normal">
+                <span className="text-lg font-normal text-gray-700">
+                  {"Publisher: "}
+                </span>
+                {game?.creator}
+              </h3>
+            </div>
             <div className=" mt-8 text-base">{game?.description}</div>
 
-            <div>Total Reviews: 5 (4.3)</div>
+            {/* <div>Total Reviews: 5 (4.3)</div> */}
 
             <div>
               {Array.from(game?.tags || []).map((tag, index) => (
