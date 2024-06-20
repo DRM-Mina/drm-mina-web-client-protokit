@@ -2,8 +2,8 @@ import { Badge } from "@/components/ui/badge";
 import { fetchGameData } from "@/lib/api";
 import { useChainStore } from "@/lib/stores/chain";
 import { useClientStore } from "@/lib/stores/client";
+import { useRegisterStore } from "@/lib/stores/gameRegister";
 import { useGamesStore } from "@/lib/stores/gameStore";
-// import { UInt64 } from "@proto-kit/library";
 import React, { useEffect } from "react";
 
 const query = `
@@ -40,11 +40,13 @@ export default function ChainStatus() {
   const client = useClientStore();
   const chain = useChainStore();
   const gameStore = useGamesStore();
+  const registerStore = useRegisterStore();
 
   useEffect(() => {
     if (!client.client) return;
     (async () => {
       const games: Game[] = await fetchGameData();
+      let gameList: Game[] = [];
       const totalGames =
         await client.client!.query.runtime.GameToken.totalGameNumber.get();
       const gameIds = Array.from(
@@ -52,14 +54,6 @@ export default function ChainStatus() {
         (_, i) => i + 1,
       );
       for (const gameId of gameIds) {
-        // const price =
-        //   await client.client!.query.runtime.GameToken.gamePrice.get(
-        //     UInt64.from(gameId),
-        //   );
-        // const discount =
-        //   await client.client!.query.runtime.GameToken.discount.get(
-        //     UInt64.from(gameId),
-        //   );
         const url =
           process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
           "http://localhost:8080/graphql";
@@ -79,19 +73,27 @@ export default function ChainStatus() {
           data.runtime.GameToken.discount?.value &&
           data.runtime.GameToken.gamePrice?.value
         ) {
-          games[gameId - 1].price = Number(
-            data.runtime.GameToken.gamePrice?.value.toString(),
-          );
-          games[gameId - 1].discount = Number(
-            data.runtime.GameToken.discount?.value.toString(),
-          );
+          const game = games.find((game: Game) => game.gameId === gameId);
+          if (game) {
+            game.price = Number(
+              data.runtime.GameToken.gamePrice?.value.toString(),
+            );
+            game.discount = Number(
+              data.runtime.GameToken.discount?.value.toString(),
+            );
+            if (!game.imageFolder) {
+              game.imageFolder = "default";
+            }
+            gameList.push(game);
+          }
         }
       }
-      gameStore.setGames(games);
-      const discounts = games.filter((game: Game) => game.discount > 0);
+      console.log(gameList);
+      gameStore.setGames(gameList);
+      const discounts = gameList.filter((game: Game) => game.discount > 0);
       gameStore.setDiscountGames(discounts);
     })();
-  }, []);
+  }, [registerStore.trigger]);
 
   return (
     <Badge className=" items-center rounded-lg text-center" variant="outline">

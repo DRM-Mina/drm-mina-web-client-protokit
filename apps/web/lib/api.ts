@@ -98,3 +98,26 @@ export async function postSlotNames(
     return false;
   }
 }
+
+export async function postGameData(signedMessage: SignedData) {
+  const headers = { "Content-Type": "application/json" };
+
+  const res = await fetch(ENDPOINT + "change-game-data", {
+    headers,
+    method: "POST",
+    body: JSON.stringify({ signature: signedMessage }),
+  });
+
+  const json = await res.json();
+  const status = res.status;
+
+  if (json.errors) {
+    throw new Error("Failed to post game data API");
+  }
+
+  if (status == 200) {
+    return true;
+  } else {
+    return false;
+  }
+}
