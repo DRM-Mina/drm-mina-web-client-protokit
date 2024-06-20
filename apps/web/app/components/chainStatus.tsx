@@ -81,8 +81,8 @@ export default function ChainStatus() {
             game.discount = Number(
               data.runtime.GameToken.discount?.value.toString(),
             );
-            if (!game.cover) {
-              game.cover = "images/default.webp";
+            if (!game.imageFolder) {
+              game.imageFolder = "default";
             }
             gameList.push(game);
           }
