@@ -10,10 +10,24 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
+import { useClientStore } from "@/lib/stores/client";
 import { useRegisterGameOnChain } from "@/lib/stores/gameRegister";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function FirstForm() {
+  const client = useClientStore();
+  const [registerFee, setRegisterFee] = useState(0);
+
+  useEffect(() => {
+    if (client.client) {
+      (async () => {
+        const feeAmount =
+          await client.client?.query.runtime.GameToken.feeAmount.get();
+        console.log(feeAmount);
+        setRegisterFee(Number(feeAmount?.toString() || 0));
+      })();
+    }
+  }, [client.client]);
   const [form, setForm] = useState({
     price: 0,
     discount: 0,
@@ -144,14 +158,14 @@ export default function FirstForm() {
       </div>
 
       <div>
-        <p className="text-md py-4">
-          0 Mina{" "}
-          {/* <img
+        <p className="text-md justify-center py-4">
+          {registerFee + " "}
+          <img
             src={"/mina.webp"}
             alt="mina"
-            className=" inline-block h-4 w-4"
-          />{" "} */}
-          will be charged for registration. Can not be refunded.
+            className=" inline-block h-4 w-4 "
+          />
+          {" will be charged for registration. Can not be refunded."}
         </p>
       </div>
 
