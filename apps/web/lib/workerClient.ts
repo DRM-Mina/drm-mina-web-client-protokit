@@ -1,4 +1,3 @@
-import { DeviceIdentifierProof } from "chain/dist/DRM";
 import type {
   ZkappWorkerRequest,
   ZkappWorkerReponse,
