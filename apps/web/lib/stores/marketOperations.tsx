@@ -9,9 +9,12 @@ import { useUserStore } from "./userWallet";
 import { useTransactionStore } from "./transactionStore";
 import { useToast } from "@/components/ui/use-toast";
 import { useEffect } from "react";
-import { UserKey } from "chain/dist/GameToken";
 import { fetchSlotNames } from "../api";
-import { DeviceIdentifierProof, DeviceKey } from "chain/dist/DRM";
+import {
+  UserKey,
+  DeviceIdentifierProof,
+  DeviceKey,
+} from "drm-mina-chain/dist/src/index.js";
 
 export interface MarketState {
   buyGame: (

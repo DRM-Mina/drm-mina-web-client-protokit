@@ -1,11 +1,8 @@
-import { Identifiers } from "chain/dist/lib/identifiers";
 import {
-  DeviceSession,
+  Identifiers,
   DeviceIdentifier,
-  DeviceSessionInput,
-  DeviceSessionOutput,
   DeviceIdentifierProof,
-} from "chain/dist/DRM.js";
+} from "drm-mina-chain/dist/src/index.js";
 
 const state = {
   status: "loading" as "loading" | "ready",
