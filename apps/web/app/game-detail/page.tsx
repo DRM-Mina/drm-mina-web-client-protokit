@@ -7,7 +7,7 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import { ChevronLeft, Download } from "lucide-react";
+import { ChevronLeft, Download, Gift } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
@@ -20,6 +20,10 @@ const ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
 const BuyGame = dynamic(() => import("../components/buyGame"), {
   loading: () => <Button>Loading...</Button>,
+});
+
+const GiftGame = dynamic(() => import("../components/giftGame"), {
+  loading: () => <Gift className=" p-4" />,
 });
 
 const AssignDevice = dynamic(() => import("./assignDevice"));
@@ -214,6 +218,7 @@ export default function GameDetail() {
                   />
                 </div>
                 <BuyGame gameId={game?.gameId} />
+                <GiftGame gameId={game?.gameId} />
               </div>
               <Button
                 variant={"link"}

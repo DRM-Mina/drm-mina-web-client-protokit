@@ -8,7 +8,6 @@ import { useCallback } from "react";
 import { useUserStore } from "./userWallet";
 import { useTransactionStore } from "./transactionStore";
 import { useToast } from "@/components/ui/use-toast";
-import { useChainStore } from "./chain";
 import { useEffect } from "react";
 import { UserKey } from "chain/dist/GameToken";
 import { fetchSlotNames } from "../api";
@@ -19,6 +18,13 @@ export interface MarketState {
     client: Client,
     address: string,
     gameId: number,
+  ) => Promise<PendingTransaction>;
+
+  giftGame: (
+    client: Client,
+    address: string,
+    gameId: number,
+    recipient: string,
   ) => Promise<PendingTransaction>;
 
   assignDevice: (
@@ -47,6 +53,24 @@ export const useMarketStore = create<MarketState, [["zustand/immer", never]]>(
 
       const tx = await client.transaction(sender, () => {
         gameToken.buyGame(UInt64.from(gameId));
+      });
+
+      await tx.sign();
+      await tx.send();
+
+      isPendingTransaction(tx.transaction);
+      return tx.transaction;
+    },
+
+    async giftGame(client, address, gameId, recipient) {
+      const gameToken = client.runtime.resolve("GameToken");
+      const sender = PublicKey.fromBase58(address);
+
+      const tx = await client.transaction(sender, () => {
+        gameToken.giftGame(
+          UInt64.from(gameId),
+          PublicKey.fromBase58(recipient),
+        );
       });
 
       await tx.sign();
@@ -101,6 +125,35 @@ export const useBuyGame = (gameId?: number) => {
       client.client,
       userStore.userPublicKey,
       gameId,
+    );
+
+    transactions.addPendingTransaction(pendingTransaction);
+  }, [client.client, userStore.userPublicKey]);
+};
+
+export const useGiftGame = (gameId?: number, recipient?: string) => {
+  const marketStore = useMarketStore();
+  const client = useClientStore();
+  const userStore = useUserStore();
+  const transactions = useTransactionStore();
+  const { toast } = useToast();
+
+  return useCallback(async () => {
+    if (userStore.isConnected === false) {
+      toast({
+        title: "Wallet not connected",
+        description: "Please connect your wallet",
+      });
+      return;
+    }
+    if (!client.client || !userStore.userPublicKey || !gameId || !recipient)
+      return;
+
+    const pendingTransaction = await marketStore.giftGame(
+      client.client,
+      userStore.userPublicKey,
+      gameId,
+      recipient,
     );
 
     transactions.addPendingTransaction(pendingTransaction);
