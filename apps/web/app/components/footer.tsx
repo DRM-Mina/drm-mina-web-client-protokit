@@ -45,7 +45,7 @@ export default function Footer({ className }: FooterProps) {
             className=" cursor-pointer text-sm font-normal underline underline-offset-4"
             onClick={() => router.push("/register")}
           >
-            Do You Want to Add Your Game?
+            Register Game
           </div>
         </div>
 
