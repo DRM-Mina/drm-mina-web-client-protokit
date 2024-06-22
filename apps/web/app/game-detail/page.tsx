@@ -15,6 +15,11 @@ import { useGamesStore } from "@/lib/stores/gameStore";
 import { useDeviceStore } from "@/lib/stores/deviceStore";
 import { useToast } from "@/components/ui/use-toast";
 import dynamic from "next/dynamic";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 const ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
@@ -55,65 +60,75 @@ export default function GameDetail() {
   const game = gameStore.games.find((game) => game.name === gameName);
   const imageCount = game?.imageCount || 1;
 
-  const handleGameDownload = async (gameId: number) => {
-    if (gameId !== 1) {
-      toast({
-        title: "Download started",
-        description:
-          "Just kidding we do not have this game yet, maybe in the future 🤷‍♂️",
-      });
-      return;
-    } else if (gameId === 1) {
-      toast({
-        title: "Download started",
-        description:
-          "Please wait while we prepare the download link for you 🚀",
-      });
-      try {
-        const signedUrlResponse = await fetch(
-          process.env.NEXT_PUBLIC_API_ENDPOINT + "get-signed-url",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              fileName: "Game-Demo.exe",
-            }),
-          },
-        );
-
-        if (!signedUrlResponse.ok) {
-          throw new Error("Failed to get signed url");
+  const handleGameDownload = async (platfom: string) => {
+    let fileName = "";
+    try {
+      if (platfom === "windows") {
+        if (game?.downloadable) {
+          fileName = game?.imageFolder + ".exe";
+        } else {
+          fileName = "Game-Demo-" + game?.gameId + ".exe";
         }
-
-        const { url } = await signedUrlResponse.json();
-
-        const downloadResponse = await fetch(url);
-        if (!downloadResponse.ok) {
-          throw new Error("Failed to download file");
+      } else if (platfom === "linux") {
+        if (game?.downloadable) {
+          fileName = game?.imageFolder + ".tar.gz";
+        } else {
+          fileName = "Game-Demo-" + game?.gameId + ".tar.gz";
         }
-        const blob = await downloadResponse.blob();
-        const urlBlob = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = urlBlob;
-        a.download = "Game-Demo.exe";
-        a.click();
-        URL.revokeObjectURL(urlBlob);
-
-        toast({
-          title: "Download complete",
-          description:
-            "Please check your download folder 😏, ensure you cloned our prover too :)",
-        });
-      } catch (error) {
-        console.error(error);
-        toast({
-          title: "Failed to download",
-          description: "Sowwy 😢, please try again later.",
-        });
+      } else if (platfom === "macos") {
+        throw new Error("MacOS not supported yet");
+      } else {
+        throw new Error("Invalid platform");
       }
+
+      const signedUrlResponse = await fetch(
+        process.env.NEXT_PUBLIC_API_ENDPOINT + "get-signed-url",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            fileName: fileName,
+          }),
+        },
+      );
+
+      if (!signedUrlResponse.ok) {
+        throw new Error("Failed to get signed url from server");
+      }
+      toast({
+        title: "Download started",
+        description: "Please wait while we download the game for you 🚀",
+      });
+      const { url } = await signedUrlResponse.json();
+
+      const downloadResponse = await fetch(url);
+      if (!downloadResponse.ok) {
+        throw new Error(
+          "Server could not find file, maybe we do not have it yet 😢",
+        );
+      }
+      const blob = await downloadResponse.blob();
+      const urlBlob = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = urlBlob;
+      a.download = fileName;
+      a.click();
+      URL.revokeObjectURL(urlBlob);
+
+      toast({
+        title: "Download complete",
+        description: "Please check your download folder 😏",
+      });
+    } catch (error: any) {
+      console.error(error);
+      toast({
+        title: "Sowwy 😢",
+        description: error.message,
+      });
     }
+
     return;
   };
 
@@ -220,14 +235,45 @@ export default function GameDetail() {
                 <BuyGame gameId={game?.gameId} />
                 <GiftGame gameId={game?.gameId} />
               </div>
-              <Button
-                variant={"link"}
-                onClick={() => {
-                  handleGameDownload(game?.gameId!);
-                }}
-              >
-                <Download size={24} /> &nbsp; Download Game
-              </Button>
+              <Popover>
+                <PopoverTrigger>
+                  <Button variant={"link"}>
+                    <Download size={24} className=" mr-2" />{" "}
+                    {game?.downloadable ? "Download Game" : "Download Demo"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <div className=" flex flex-col gap-6 p-4">
+                    <Button
+                      className=" flex flex-row justify-start text-center"
+                      onClick={() => {
+                        handleGameDownload("windows");
+                      }}
+                    >
+                      <Download size={24} className=" mr-2" />
+                      Windows Downloader
+                    </Button>
+                    <Button
+                      className=" flex flex-row justify-start text-center"
+                      onClick={() => {
+                        handleGameDownload("linux");
+                      }}
+                    >
+                      <Download size={24} className=" mr-2" />
+                      Linux Downloader
+                    </Button>
+                    <Button
+                      className=" flex flex-row justify-start text-center"
+                      onClick={() => {
+                        handleGameDownload("macos");
+                      }}
+                    >
+                      <Download size={24} className=" mr-2" />
+                      MacOS Downloader
+                    </Button>
+                  </div>
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
         </div>

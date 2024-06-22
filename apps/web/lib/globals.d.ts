@@ -26,6 +26,7 @@ declare global {
     price: number;
     discount: number;
     tags: string[];
+    downloadable: boolean;
   }
   interface RawIdentifiers {
     cpuId: string;
