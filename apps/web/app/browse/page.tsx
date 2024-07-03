@@ -51,7 +51,10 @@ export default function Browse() {
           <div className="card-drawer flex h-full flex-col items-center gap-3 bg-background p-3"></div>
           <CardFooter className="mt-4 flex justify-between">
             <h3 className="text-lg font-medium">{game.name}</h3>
-            <h3 className="text-lg font-medium">{game.price}</h3>
+            <h3 className="text-lg font-medium">
+              {game.price - game.discount}
+              <img src={"/mina.webp"} alt="mina" className=" inline h-4 w-4" />
+            </h3>
           </CardFooter>
         </Card>
       ))}

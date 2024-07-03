@@ -141,7 +141,7 @@ export default function DynamicLibrary() {
 
               <CardContent className=" col-span-3 items-center">
                 <CardTitle className=" pb-2 pt-6">{game.name}</CardTitle>
-                <CardDescription className="py-2">
+                <CardDescription className="line-clamp-3 py-2">
                   {game.description}
                 </CardDescription>
               </CardContent>
