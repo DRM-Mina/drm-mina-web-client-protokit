@@ -76,9 +76,9 @@ export default function GameDetail() {
           fileName = "Game-Demo-" + game?.gameId + ".tar.gz";
         }
       } else if (platfom === "macos") {
-        throw new Error("MacOS not supported yet");
+        fileName = game?.imageFolder + ".dmg";
       } else {
-        throw new Error("Invalid platform");
+        fileName = "Game-Demo-" + game?.gameId + ".dmg";
       }
 
       const signedUrlResponse = await fetch(
