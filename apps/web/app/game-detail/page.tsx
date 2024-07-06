@@ -76,9 +76,9 @@ export default function GameDetail() {
           fileName = "Game-Demo-" + game?.gameId + ".tar.gz";
         }
       } else if (platfom === "macos") {
-        fileName = game?.imageFolder + ".dmg";
+        fileName = game?.imageFolder + ".zip";
       } else {
-        fileName = "Game-Demo-" + game?.gameId + ".dmg";
+        fileName = "Game-Demo-" + game?.gameId + ".zip";
       }
 
       const signedUrlResponse = await fetch(
